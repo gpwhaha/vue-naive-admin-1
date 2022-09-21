@@ -74,3 +74,20 @@ export function debounce(method, wait, immediate) {
     }
   }
 }
+
+/**
+ * 本地存储
+ * @param {*} key
+ * @param {*} value
+ */
+export const localSave = (key, value) => {
+  localStorage.setItem(key, value)
+}
+
+/**
+ * 根据key获取本地存储的值
+ * @param {*} key
+ */
+export const localRead = (key) => {
+  return localStorage.getItem(key) || ''
+}

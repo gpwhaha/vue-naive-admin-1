@@ -31,6 +31,19 @@
           />
         </div>
 
+        <div mt-30 v-if="showGraphicsCode">
+          <n-input v-model:value="loginInfo.verifyCode" placeholder="请输入验证码">
+            <template #suffix>
+              <img
+                @click="getCode"
+                v-if="valiCodeUrl"
+                :src="valiCodeUrl"
+                style="cursor: pointer; width: 20rem; height: 90%"
+              />
+            </template>
+          </n-input>
+        </div>
+
         <div mt-20>
           <n-checkbox :checked="isRemember" label="记住我" :on-update:checked="(val) => (isRemember = val)" />
         </div>
@@ -46,23 +59,36 @@
 </template>
 
 <script setup>
+import md5 from 'js-md5'
 import { lStorage } from '@/utils/cache'
 import { setToken } from '@/utils/token'
 import { useStorage } from '@vueuse/core'
 import bgImg from '@/assets/images/login_bg.webp'
-import api from './api'
+import api from '@/api/index'
+import { useUserStore } from '@/store/modules/user'
 
+const ENTER_VERIFICE_CODE = 20030
+const VERIFICE_CODE_INVALID = 20027 //图形验证码已失效
+const VERIFICE_CODE_ERROR = 20028 //图形验证码错误或已失效
+const userStore = useUserStore()
 const title = import.meta.env.VITE_TITLE
-
+const isRemember = useStorage('isRemember', false)
+const loging = ref(false)
+const showGraphicsCode = ref(false)
+const valiCodeUrl = ref('')
 const router = useRouter()
 const { query } = useRoute()
 
 const loginInfo = ref({
   name: '',
   password: '',
+  verifyCode: '',
 })
 
-initLoginInfo()
+onMounted(() => {
+  initLoginInfo()
+  getCode()
+})
 
 function initLoginInfo() {
   const localLoginInfo = lStorage.get('loginInfo')
@@ -72,10 +98,13 @@ function initLoginInfo() {
   }
 }
 
-const isRemember = useStorage('isRemember', false)
-const loging = ref(false)
+async function getCode() {
+  const res = await api.getLoginCode()
+  valiCodeUrl.value = window.URL.createObjectURL(res)
+}
+
 async function handleLogin() {
-  const { name, password } = loginInfo.value
+  const { name, password, verifyCode } = loginInfo.value
   if (!name || !password) {
     $message.warning('请输入用户名和密码')
     return
@@ -83,10 +112,19 @@ async function handleLogin() {
   try {
     $message.loading('正在验证...')
     loging.value = true
-    const res = await api.login({ name, password: password.toString() })
+    const res = await userStore.handleLogin({
+      username: name,
+      password: md5.hex(password.toString()),
+      extra: md5.hex(password),
+      isEncrypt: false,
+      systemVersion: 'standard',
+      verifyCode,
+    })
+    // const res = await api.login({ name, password: password.toString() })
+
     if (res.code === 0) {
       $message.success('登录成功')
-      setToken(res.data.token)
+      setToken(res.token)
       if (isRemember.value) {
         lStorage.set('loginInfo', { name, password })
       } else {
@@ -99,8 +137,17 @@ async function handleLogin() {
       } else {
         router.push('/')
       }
+    } else if (res.code === ENTER_VERIFICE_CODE) {
+      showGraphicsCode.value = true
+      $message.error('请输入图形验证码')
+    } else if (res.code === VERIFICE_CODE_INVALID) {
+      showGraphicsCode.value = true
+      $message.error('图形验证码错误或已失效')
+    } else if (res.code === VERIFICE_CODE_ERROR) {
+      showGraphicsCode.value = true
+      $message.error('图形验证码已失效')
     } else {
-      $message.warning(res.message)
+      $message.warning(res.msg)
     }
   } catch (error) {
     $message.error(error.message)

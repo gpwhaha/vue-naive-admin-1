@@ -15,6 +15,7 @@ specifiers:
   cz-customizable: ^6.9.0
   dayjs: ^1.11.0
   dotenv: ^10.0.0
+  encryptlong: ^3.1.4
   eslint: ^8.12.0
   eslint-config-prettier: ^8.5.0
   eslint-plugin-prettier: ^4.0.0
@@ -22,6 +23,8 @@ specifiers:
   esno: ^0.13.0
   fs-extra: ^10.0.1
   husky: ^8.0.1
+  js-md5: ^0.7.3
+  jsencrypt: ^3.2.1
   lint-staged: ^13.0.3
   lodash-es: ^4.17.21
   md-editor-v3: ^1.11.4
@@ -48,6 +51,9 @@ dependencies:
   '@vueuse/core': 8.4.2_vue@3.2.31
   axios: 0.21.4
   dayjs: 1.11.0
+  encryptlong: 3.1.4
+  js-md5: 0.7.3
+  jsencrypt: 3.2.1
   lodash-es: 4.17.21
   md-editor-v3: 1.11.4
   mockjs: 1.1.0
@@ -1842,6 +1848,10 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
+  /encryptlong/3.1.4:
+    resolution: {integrity: sha512-nx+om7MXaSBSBPBNKKPrOWMot/C0L0Ru8dy9WTyjO5k8Wo+1hsnK0d8uX1UjctkgcgEWhkKhVScniYDjXvnKgw==}
+    dev: false
+
   /entities/1.1.2:
     resolution: {integrity: sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==}
     dev: true
@@ -3336,6 +3346,10 @@ packages:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}
     dev: true
 
+  /js-md5/0.7.3:
+    resolution: {integrity: sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==}
+    dev: false
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: true
@@ -3346,6 +3360,10 @@ packages:
     dependencies:
       argparse: 2.0.1
     dev: true
+
+  /jsencrypt/3.2.1:
+    resolution: {integrity: sha512-k1sD5QV0KPn+D8uG9AdGzTQuamt82QZ3A3l6f7TRwMU6Oi2Vg0BsL+wZIQBONcraO1pc78ExMdvmBBJ8WhNYUA==}
+    dev: false
 
   /json-parse-even-better-errors/2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}

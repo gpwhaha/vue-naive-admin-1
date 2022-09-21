@@ -6,7 +6,14 @@ import { isWithoutToken } from './helpers'
 export function reqResolve(config) {
   // 防止缓存，给get请求加上时间戳
   if (config.method === 'get') {
-    config.params = { ...config.params, t: new Date().getTime() }
+    config.params = {
+      ...config.params,
+      t: new Date().getTime(),
+      timeStamp: new Date().getTime(),
+      'Content-Type': 'application/json',
+      loginType: 'W',
+      version: 202011,
+    }
   }
 
   // 处理不需要token的请求
@@ -23,10 +30,9 @@ export function reqResolve(config) {
 
   /**
    * * 加上 token
-   * ! 认证方案: JWT Bearer
+   * ! 认证方案: JWT
    */
-  config.headers.Authorization = config.headers.Authorization || 'Bearer ' + token
-
+  config.headers.token = config.headers.token || token
   return config
 }
 
