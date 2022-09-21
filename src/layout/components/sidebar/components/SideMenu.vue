@@ -6,22 +6,19 @@
     :collapsed-icon-size="22"
     :collapsed-width="64"
     :options="menuOptions"
-    :value="(currentRoute.meta && currentRoute.meta.activeMenu) || currentRoute.name"
+    :value="curRoute.meta?.activeMenu || curRoute.name"
     @update:value="handleMenuSelect"
   />
 </template>
 
 <script setup>
-import { usePermissionStore } from '@/store/modules/permission'
-
-import { isExternal } from '@/utils/is'
-import { useAppStore } from '@/store/modules/app'
-import { renderCustomIcon, renderIcon } from '@/utils/icon'
+import { usePermissionStore, useAppStore } from '@/store'
+import { renderCustomIcon, renderIcon, isExternal } from '@/utils'
 
 const router = useRouter()
+const curRoute = useRoute()
 const permissionStore = usePermissionStore()
 const appStore = useAppStore()
-const { currentRoute } = router
 
 const menuOptions = computed(() => {
   return permissionStore.menus.map((item) => getMenuItem(item)).sort((a, b) => a.order - b.order)
@@ -87,7 +84,7 @@ function handleMenuSelect(key, item) {
   if (isExternal(item.path)) {
     window.open(item.path)
   } else {
-    if (item.path === currentRoute.value.path && !currentRoute.value.meta?.keepAlive) {
+    if (item.path === curRoute.path) {
       appStore.reloadPage()
     } else {
       router.push(item.path)
