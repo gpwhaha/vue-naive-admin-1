@@ -1,12 +1,13 @@
 <template>
   <AppPage :show-footer="true">
+    <money-cards></money-cards>
     <div flex-1>
       <n-card rounded-10>
         <div flex items-center>
           <img rounded-full width="60" :src="userStore.avatar" />
-          <div ml-20>
-            <p text-16>Hello, {{ userStore.name }}</p>
-            <p mt-5 text-12 op-60>今天又是元气满满的一天</p>
+          <div ml-10>
+            <p text-8>Hello, {{ userStore.name }}</p>
+            <p mt-5 text-8 op-60>今天又是元气满满的一天</p>
           </div>
           <div ml-auto flex items-center>
             <n-statistic label="待办" :value="4">
@@ -26,7 +27,7 @@
         </div>
       </n-card>
 
-      <n-card title="项目" size="small" :segmented="true" mt-15 rounded-10>
+      <n-card title="项目" size="small" :segmented="true" mt-5 rounded-10>
         <template #header-extra>
           <n-button text type="primary">更多</n-button>
         </template>
@@ -52,6 +53,7 @@
 </template>
 
 <script setup>
+import moneyCards from './components/moneyCards.vue'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()

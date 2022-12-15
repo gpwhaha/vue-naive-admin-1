@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
-import { setToken, removeToken } from '@/utils/token'
+import { removeToken } from '@/utils/token'
 import { toLogin } from '@/utils/auth'
 import { JSEncrypt } from 'encryptlong'
-// import md5 from 'js-md5'
 import api from '@/api'
-import { localRead, localSave } from '@/utils'
+import { localSave } from '@/utils'
 
 export const useUserStore = defineStore('user', {
   state() {
@@ -18,7 +17,7 @@ export const useUserStore = defineStore('user', {
       return this.userInfo?.id
     },
     name() {
-      return this.userInfo?.name
+      return this.userInfo?.realname
     },
     avatar() {
       return this.userInfo?.avatar
@@ -79,7 +78,7 @@ export const useUserStore = defineStore('user', {
               if (res.code === 0) {
                 const {
                   id,
-                  username,
+                  realname,
                   isAdmin,
                   companyId,
                   phone,
@@ -94,7 +93,7 @@ export const useUserStore = defineStore('user', {
                 localSave('fifthGenVersion', Boolean(fifthGenVersion))
                 this.userInfo = {
                   id,
-                  username,
+                  realname,
                   isAdmin,
                   companyId,
                   phone,
@@ -120,20 +119,6 @@ export const useUserStore = defineStore('user', {
       })
     },
 
-    // async getUserInfo() {
-    //   try {
-    //     const res = await api.getUser()
-    //     if (res.code === 0) {
-    //       const { id, name, avatar, role } = res.data
-    //       this.userInfo = { id, name, avatar, role }
-    //       return Promise.resolve(res.data)
-    //     } else {
-    //       return Promise.reject(res)
-    //     }
-    //   } catch (error) {
-    //     return Promise.reject(error)
-    //   }
-    // },
     async logout() {
       removeToken()
       this.userInfo = {}
