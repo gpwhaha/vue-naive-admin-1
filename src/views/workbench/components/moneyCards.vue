@@ -1,7 +1,10 @@
 <template>
-  <div class="box" mb-5>
+  <div class="box" grid mb-5 w-full>
     <n-card v-for="(item, index) in imageList" :key="index" rounded-4 hoverable content-style="padding: 0;">
-      <div class="content" :style="{ backgroundImage: `url(${item.src})` }">{{ item.name }}</div>
+      <div h-38 rounded-4 bg-no-repeat bg-cover pl-10 :style="{ backgroundImage: `url(${item.src})` }" class="content">
+        <div mt-10 font-700 text-12 color-teal-300 hover-text-14 :style="{ color: item.color }">{{ item.money }}</div>
+        <div font-700 text-6>{{ item.name }}</div>
+      </div>
     </n-card>
   </div>
 </template>
@@ -13,6 +16,8 @@ import monthListMoney from '@/assets/images/monthListMoney.png'
 import yearListMoney from '@/assets/images/yearListMoney.png'
 import yearGetMoney from '@/assets/images/yearGetMoney.png'
 import yearPayMoney from '@/assets/images/yearPayMoney.png'
+
+import { getMyPlanStatistics } from '../api'
 const imageList = ref([
   {
     name: '今日回款',
@@ -51,19 +56,35 @@ const imageList = ref([
     color: '#F28484',
   },
 ])
+
+const getworkStatistics = async () => {
+  try {
+    const { data, code, msg } = await getMyPlanStatistics()
+    if (code === 0) {
+      const { todayReturned, todayPayed, monthReturned, monthPayed, yearReturned, yearPayed } = data
+      imageList.value[0].money = todayReturned || 0
+      imageList.value[1].money = todayPayed || 0
+      imageList.value[2].money = monthReturned || 0
+      imageList.value[3].money = monthPayed || 0
+      imageList.value[4].money = yearReturned || 0
+      imageList.value[5].money = yearPayed || 0
+    } else {
+      $message.error(msg)
+    }
+  } catch (e) {
+    $message.error(e)
+  }
+}
+getworkStatistics()
 </script>
 
 <style lang="scss" scoped>
 .box {
-  width: 100%;
-  display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 2rem;
+
   .content {
-    width: 100%;
-    height: 14rem;
-    background-repeat: no-repeat;
-    border-radius: 1rem;
+    background-position: 0 -4rem;
   }
 }
 </style>
