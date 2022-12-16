@@ -25,7 +25,7 @@ export const basicRoutes = [
     meta: {
       title: '外部链接',
       icon: 'mdi:link-variant',
-      order: 2,
+      order: 4,
     },
     children: [
       {
@@ -61,6 +61,12 @@ export const NOT_FOUND_ROUTE = {
   path: '/:pathMatch(.*)*',
   redirect: '/404',
   isHidden: true,
+}
+
+export const EMPTY_ROUTE = {
+  name: 'Empty',
+  path: '/:pathMatch(.*)*',
+  component: null,
 }
 
 const modules = import.meta.glob('@/views/**/route.js', { eager: true })

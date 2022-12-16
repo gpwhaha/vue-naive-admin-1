@@ -31,14 +31,14 @@
           />
         </div>
 
-        <div mt-30 v-if="showGraphicsCode">
+        <div v-if="showGraphicsCode" mt-30>
           <n-input v-model:value="loginInfo.verifyCode" placeholder="请输入验证码">
             <template #suffix>
               <img
-                @click="getCode"
                 v-if="valiCodeUrl"
                 :src="valiCodeUrl"
                 style="cursor: pointer; width: 20rem; height: 90%"
+                @click="getCode"
               />
             </template>
           </n-input>
@@ -49,7 +49,7 @@
         </div>
 
         <div mt-20>
-          <n-button w-full h-50 rounded-5 text-16 type="primary" :loading="loging" @click="handleLogin">
+          <n-button w-full h-50 rounded-5 text-16 type="primary" :loading="loading" @click="handleLogin">
             登录
           </n-button>
         </div>
@@ -60,12 +60,12 @@
 
 <script setup>
 import md5 from 'js-md5'
-import { lStorage } from '@/utils/cache'
-import { setToken } from '@/utils/token'
+import { useUserStore } from '@/store/modules/user'
+import { lStorage, setToken } from '@/utils'
 import { useStorage } from '@vueuse/core'
 import bgImg from '@/assets/images/login_bg.webp'
-import api from '@/api/index'
-import { useUserStore } from '@/store/modules/user'
+import api from '@/api'
+import { addDynamicRoutes } from '@/router'
 
 const ENTER_VERIFICE_CODE = 20030
 const VERIFICE_CODE_INVALID = 20027 //图形验证码已失效
@@ -73,7 +73,7 @@ const VERIFICE_CODE_ERROR = 20028 //图形验证码错误或已失效
 const userStore = useUserStore()
 const title = import.meta.env.VITE_TITLE
 const isRemember = useStorage('isRemember', false)
-const loging = ref(false)
+const loading = ref(false)
 const showGraphicsCode = ref(false)
 const valiCodeUrl = ref('')
 const router = useRouter()
@@ -110,8 +110,8 @@ async function handleLogin() {
     return
   }
   try {
+    loading.value = true
     $message.loading('正在验证...')
-    loging.value = true
     const res = await userStore.handleLogin({
       username: name,
       password: md5.hex(password.toString()),
@@ -121,7 +121,6 @@ async function handleLogin() {
       verifyCode,
     })
     // const res = await api.login({ name, password: password.toString() })
-
     if (res.code === 0) {
       $message.success('登录成功')
       setToken(res.token)
@@ -130,6 +129,7 @@ async function handleLogin() {
       } else {
         lStorage.remove('loginInfo')
       }
+      await addDynamicRoutes()
       if (query.redirect) {
         const path = query.redirect
         Reflect.deleteProperty(query, 'redirect')
@@ -150,8 +150,9 @@ async function handleLogin() {
       $message.warning(res.msg)
     }
   } catch (error) {
-    $message.error(error.message)
+    console.error(error)
+    $message.removeMessage()
   }
-  loging.value = false
+  loading.value = false
 }
 </script>

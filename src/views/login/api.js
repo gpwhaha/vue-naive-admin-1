@@ -1,5 +1,5 @@
-import request from '@/utils/http'
+import { request } from '@/utils'
 
 export default {
-  login: (data) => request.post('/auth/login', data),
+  login: (data) => request.post('/auth/login', data, { noNeedToken: true }),
 }
