@@ -8,11 +8,11 @@ export function reqResolve(config) {
   if (config.method === 'get') {
     config.params = {
       ...config.params,
-      t: new Date().getTime(),
-      timeStamp: new Date().getTime(),
-      'Content-Type': 'application/json',
-      loginType: 'W',
-      version: 202011,
+      // t: new Date().getTime(),
+      // timeStamp: new Date().getTime(),
+      // 'Content-Type': 'application/json',
+      // loginType: 'W',
+      // version: 202011,
     }
   }
 

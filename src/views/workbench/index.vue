@@ -1,6 +1,16 @@
 <template>
   <AppPage :show-footer="true">
     <money-cards></money-cards>
+    <div flex w-auto>
+      <div class="left" flex flex-col mr-8>
+        <todoDesk></todoDesk>
+        <AiCreate></AiCreate>
+      </div>
+      <div class="right" flex-1>
+        <AiTools></AiTools>
+        <FileHonr></FileHonr>
+      </div>
+    </div>
     <div flex-1>
       <n-card rounded-10>
         <div flex items-center>
@@ -54,7 +64,20 @@
 
 <script setup>
 import moneyCards from './components/moneyCards.vue'
+import todoDesk from './components/todoDesk.vue'
+import AiCreate from './components/aiCreate.vue'
+import AiTools from './components/aiTools.vue'
+import FileHonr from './components/fileHonr.vue'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
 </script>
+
+<style lang="scss">
+.left {
+  flex: 2;
+}
+.right {
+  flex: 1;
+}
+</style>
