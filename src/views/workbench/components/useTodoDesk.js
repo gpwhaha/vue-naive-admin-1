@@ -5,6 +5,7 @@ import { formatDateTime } from '@/utils'
 import { renderIcon } from '@/utils/icon'
 
 export const useTodoDesk = () => {
+  //ref数据
   const collapseValue = ref(false)
   const size = ref('small')
   const toCheckCount = ref(0)
@@ -24,6 +25,16 @@ export const useTodoDesk = () => {
     pageSize: 10,
   })
 
+  //计算属性
+  const pageCount = computed(() => {
+    let count = {
+      1: toCheckCount,
+      2: toHonrkCount,
+    }
+    return count[activeName]
+  })
+
+  //方法
   function isOpen(val) {
     collapseValue.value = val.expanded
   }
@@ -64,12 +75,17 @@ export const useTodoDesk = () => {
     rowData.value = row
     if (activeName.value === '1') {
       // toAudit(row.applyId)
-      console.log('协商')
+      console.log('审批')
     } else if (activeName.value === '2') {
       showPlan.value = true
     } else {
       console.log('协商')
     }
+  }
+
+  function handelPageChange(page) {
+    search.value.pageNo = page
+    getTableData()
   }
 
   async function getTableData(type) {
@@ -98,7 +114,16 @@ export const useTodoDesk = () => {
   function initColumns() {
     if (activeName.value === '1') {
       columns.value = [
-        { title: '合同编号', key: 'billNo', ellipsis: { tooltip: true } },
+        {
+          title: '合同信息',
+          key: 'billNo',
+          render(row) {
+            return h('div', [
+              h('div', { class: 'font-700' }, row.contractTitle),
+              h('div', { style: 'color: #4b5563' }, row.billNo),
+            ])
+          },
+        },
         { title: '用户', key: 'userName', ellipsis: { tooltip: true } },
         {
           title: '履约开始时间',
@@ -130,7 +155,7 @@ export const useTodoDesk = () => {
                   style: 'margin-left: 15px;',
                   onClick: () => handelTodo(row),
                 },
-                { default: () => '立即处理', icon: renderIcon('material-symbols:delete-outline', { size: 14 }) }
+                { default: () => '立即处理', icon: renderIcon('ep:checked', { size: 14 }) }
               ),
             ]
           },
@@ -138,7 +163,16 @@ export const useTodoDesk = () => {
       ]
     } else {
       columns.value = [
-        { title: '合同编号', key: 'billNo', ellipsis: { tooltip: true } },
+        {
+          title: '合同信息',
+          key: 'billNo',
+          render(row) {
+            return h('div', [
+              h('div', { class: 'font-700' }, row.contractTitle),
+              h('div', { style: 'color: #4b5563' }, row.billNo),
+            ])
+          },
+        },
         { title: '用户', key: 'userName', ellipsis: { tooltip: true } },
         {
           title: '类型',
@@ -177,7 +211,7 @@ export const useTodoDesk = () => {
                   style: 'margin-left: 15px;',
                   onClick: () => handelTodo(row),
                 },
-                { default: () => '立即处理', icon: renderIcon('material-symbols:delete-outline', { size: 14 }) }
+                { default: () => '立即处理', icon: renderIcon('ep:checked', { size: 14 }) }
               ),
             ]
           },
@@ -195,9 +229,12 @@ export const useTodoDesk = () => {
     page,
     columns,
     tableData,
+    pageCount,
+    search,
     isOpen,
     handleUpdateValue,
     initTableData,
     initColumns,
+    handelPageChange,
   }
 }

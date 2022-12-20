@@ -6,7 +6,7 @@
         <todoDesk></todoDesk>
         <AiCreate></AiCreate>
       </div>
-      <div class="right" flex-1>
+      <div class="right" flex-1 flex flex-col>
         <AiTools></AiTools>
         <FileHonr></FileHonr>
       </div>

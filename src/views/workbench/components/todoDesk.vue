@@ -1,5 +1,5 @@
 <template>
-  <div h-auto w-auto mb-4 class="todo-contain" box-border p-4>
+  <div h-auto w-auto mb-4 class="todo-contain" box-border py-2 px-4>
     <n-collapse v-model="collapseValue" arrow-placement="right" :on-item-header-click="isOpen">
       <n-collapse-item>
         <template #header>
@@ -18,7 +18,12 @@
 
                 <div ml-4 flex>
                   <div w-24>共 {{ totalCount }} 条</div>
-                  <n-pagination v-model:page="page" :page-count="10" :page-sizes="[5]">
+                  <n-pagination
+                    v-model:page="search.pageNo"
+                    :page-count="pageCount"
+                    :page-sizes="[5]"
+                    :on-update:page="handelPageChange"
+                  >
                     <template #prev> <TheIcon icon="ep:arrow-left-bold" class="mr-5" :size="18" /> </template>
                     <template #next> <TheIcon icon="ep:arrow-right-bold" class="mr-5" :size="18" /> </template>
                   </n-pagination>
@@ -29,7 +34,7 @@
           </div>
         </template>
         <div>
-          <n-data-table :columns="columns" :data="tableData" />
+          <n-data-table :style="{ height: `34rem` }" flex-height :columns="columns" :data="tableData" />
         </div>
       </n-collapse-item>
     </n-collapse>
@@ -46,10 +51,13 @@ const {
   totalCount,
   columns,
   tableData,
+  pageCount,
+  search,
   isOpen,
   handleUpdateValue,
   initColumns,
   initTableData,
+  handelPageChange,
 } = useTodoDesk()
 onBeforeMount(() => {
   initColumns()

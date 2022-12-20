@@ -1,5 +1,5 @@
 <template>
-  <n-icon mr-20 size="20" style="cursor: pointer" @click="handleLinkClick">
+  <n-icon mr-8 size="20" style="cursor: pointer" @click="handleLinkClick">
     <icon-mdi:github />
   </n-icon>
 </template>

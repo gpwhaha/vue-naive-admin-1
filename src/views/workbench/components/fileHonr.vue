@@ -1,5 +1,7 @@
 <template>
-  <div h-100 w-auto class="todo-contain">归档履约</div>
+  <div flex-1 w-auto p-4 class="todo-contain">
+    <div font-700 text-7>归档履约</div>
+  </div>
 </template>
 <script setup></script>
 <style lang="scss">
