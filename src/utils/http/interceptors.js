@@ -72,41 +72,44 @@ export function reqReject(error) {
   return Promise.reject(error)
 }
 
-export function repResolve(response) {
+export function resResolve(response) {
   // TODO: 处理不同的 response.headers
   const { data, status, config, statusText } = response
   if ((response.data?.code !== 0 || response.data?.code !== 200) && status !== 200) {
-    const code = data?.code ?? status
-    /** 根据code处理对应的操作，并返回处理后的message */
-    const message = resolveResError(code, data?.msg ?? statusText)
+    if (data?.code !== 0) {
+      const code = data?.code ?? status
+      /** 根据code处理对应的操作，并返回处理后的message */
+      const message = resolveResError(code, data?.msg ?? statusText)
 
-    /** 需要错误提醒 */
-    !config.noNeedTip && $message.error(message)
-    return Promise.reject({ code, message, error: response?.data })
-  } else if (['1', 20021, 20022].includes(data?.code)) {
-    const code = data?.code ?? status
-    /** 根据code处理对应的操作，并返回处理后的message */
-    const message = resolveResError(code, data?.msg || data?.message || statusText)
-    /** 需要错误提醒 */
-    $message.error(message)
-    return Promise.reject({ code, message, error: response?.data })
+      /** 需要错误提醒 */
+      !config.noNeedTip && $message.error(message)
+      return Promise.reject({ code, message, error: response?.data })
+    } else if (['1', 20021, 20022].includes(data?.code)) {
+      const code = data?.code ?? status
+      /** 根据code处理对应的操作，并返回处理后的message */
+      const message = resolveResError(code, data?.msg || data?.message || statusText)
+      /** 需要错误提醒 */
+      $message.error(message)
+      return Promise.reject({ code, message, error: response?.data })
+      !config.noNeedTip && window.$message?.error(message)
+      return Promise.reject({ code, message, error: data || response })
+    }
   }
-
   return Promise.resolve(data)
 }
 
-export function repReject(error) {
+export function resReject(error) {
   if (!error || !error.response) {
     const code = error?.code
     /** 根据code处理对应的操作，并返回处理后的message */
     const message = resolveResError(code, error.message)
-    $message?.error(message)
+    window.$message?.error(message)
     return Promise.reject({ code, message, error })
   }
   const { data, status, config } = error.response
   const code = data?.code ?? status
   const message = resolveResError(code, data?.message ?? error.message)
   /** 需要错误提醒 */
-  !config?.noNeedTip && $message.error(message)
-  return Promise.reject({ code, message, error: error.response?.data })
+  !config?.noNeedTip && window.$message?.error(message)
+  return Promise.reject({ code, message, error: error.response?.data || error.response })
 }

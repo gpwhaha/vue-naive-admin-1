@@ -40,7 +40,6 @@ export const useUserStore = defineStore('user', {
       username = username.trim()
       return new Promise(async (resolve, reject) => {
         const data = await api.getPublicKey()
-        console.log({ username, password, data })
         const jsencrypt = new JSEncrypt()
         jsencrypt.setPublicKey(data.data)
         username = encodeURI(jsencrypt.encryptLong(username))

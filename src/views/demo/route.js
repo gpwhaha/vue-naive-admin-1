@@ -14,8 +14,8 @@ export default {
   },
   children: [
     {
-      name: 'CrudTable',
-      path: 'crud-table',
+      name: 'Crud',
+      path: 'crud',
       component: () => import('./table/index.vue'),
       meta: {
         title: 'CRUD表格',
@@ -32,6 +32,18 @@ export default {
       meta: {
         title: 'MD编辑器',
         icon: 'ri:markdown-line',
+        role: ['admin'],
+        requireAuth: true,
+        keepAlive: true,
+      },
+    },
+    {
+      name: 'RichTextEditor',
+      path: 'rich-text',
+      component: () => import('./editor/rich-text.vue'),
+      meta: {
+        title: '富文本编辑器',
+        icon: 'ic:sharp-text-rotation-none',
         role: ['admin'],
         requireAuth: true,
         keepAlive: true,

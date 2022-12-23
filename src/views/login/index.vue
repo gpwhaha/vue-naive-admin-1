@@ -78,6 +78,7 @@ const showGraphicsCode = ref(false)
 const valiCodeUrl = ref('')
 const router = useRouter()
 const { query } = useRoute()
+const r = useRoute()
 
 const loginInfo = ref({
   name: '',
@@ -120,21 +121,25 @@ async function handleLogin() {
       systemVersion: 'standard',
       verifyCode,
     })
-    // const res = await api.login({ name, password: password.toString() })
     if (res.code === 0) {
       $message.success('登录成功')
+      console.log(res)
       setToken(res.token)
       if (isRemember.value) {
         lStorage.set('loginInfo', { name, password })
       } else {
         lStorage.remove('loginInfo')
       }
+      console.log(1111, query, r)
       await addDynamicRoutes()
+      console.log(2222)
       if (query.redirect) {
+        console.log(333)
         const path = query.redirect
         Reflect.deleteProperty(query, 'redirect')
         router.push({ path, query })
       } else {
+        console.log(444)
         router.push('/')
       }
     } else if (res.code === ENTER_VERIFICE_CODE) {
