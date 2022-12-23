@@ -2,27 +2,27 @@
   <AppPage :show-footer="true" bg-cover :style="{ backgroundImage: `url(${bgImg})` }">
     <div
       style="transform: translateY(25px)"
-      class="m-auto p-15 f-c-c min-w-345 max-w-700 rounded-10 card-shadow bg-white bg-opacity-60"
+      class="m-auto p-5 f-c-c min-w-200 max-w-320 rounded-10 card-shadow bg-white bg-opacity-60"
     >
-      <div w-380 hidden md:block px-20 py-35>
+      <div w-200 hidden md:block px-15 py-20>
         <img src="@/assets/images/login_banner.webp" w-full alt="login_banner" />
       </div>
 
-      <div w-320 flex-col px-20 py-35>
-        <h5 f-c-c text-24 font-normal color="#6a6a6a"><icon-custom-logo mr-10 text-50 color-primary />{{ title }}</h5>
-        <div mt-30>
+      <div w-150 flex-col px-6 py-10>
+        <h5 f-c-c text-10 font-normal color="#6a6a6a"><icon-custom-logo mr-10 text-20 color-primary />{{ title }}</h5>
+        <div mt-6>
           <n-input
             v-model:value="loginInfo.name"
             autofocus
-            class="text-16 items-center h-50 pl-10"
+            class="text-6 items-center h-15 pl-5"
             placeholder="admin"
             :maxlength="20"
           />
         </div>
-        <div mt-30>
+        <div mt-10>
           <n-input
             v-model:value="loginInfo.password"
-            class="text-16 items-center h-50 pl-10"
+            class="text-6 items-center h-15 pl-5"
             type="password"
             show-password-on="mousedown"
             placeholder="123456"
@@ -31,7 +31,7 @@
           />
         </div>
 
-        <div v-if="showGraphicsCode" mt-30>
+        <div v-if="showGraphicsCode" mt-10>
           <n-input v-model:value="loginInfo.verifyCode" placeholder="请输入验证码">
             <template #suffix>
               <img
@@ -44,14 +44,12 @@
           </n-input>
         </div>
 
-        <div mt-20>
+        <div mt-10>
           <n-checkbox :checked="isRemember" label="记住我" :on-update:checked="(val) => (isRemember = val)" />
         </div>
 
-        <div mt-20>
-          <n-button w-full h-50 rounded-5 text-16 type="primary" :loading="loading" @click="handleLogin">
-            登录
-          </n-button>
+        <div mt-10>
+          <n-button w-full h-15 rounded-5 text-6 type="primary" :loading="loging" @click="handleLogin"> 登录 </n-button>
         </div>
       </div>
     </div>
@@ -123,23 +121,18 @@ async function handleLogin() {
     })
     if (res.code === 0) {
       $message.success('登录成功')
-      console.log(res)
       setToken(res.token)
       if (isRemember.value) {
         lStorage.set('loginInfo', { name, password })
       } else {
         lStorage.remove('loginInfo')
       }
-      console.log(1111, query, r)
       await addDynamicRoutes()
-      console.log(2222)
       if (query.redirect) {
-        console.log(333)
         const path = query.redirect
         Reflect.deleteProperty(query, 'redirect')
         router.push({ path, query })
       } else {
-        console.log(444)
         router.push('/')
       }
     } else if (res.code === ENTER_VERIFICE_CODE) {

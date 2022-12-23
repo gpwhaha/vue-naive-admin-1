@@ -4,7 +4,7 @@
       v-for="tag in tagsStore.tags"
       ref="tabRefs"
       :key="tag.path"
-      class="px-15 mx-5 rounded-4 cursor-pointer hover:color-primary"
+      class="px-5 mx-2 rounded-4 cursor-pointer hover:color-primary"
       :type="tagsStore.activeTag === tag.path ? 'primary' : 'default'"
       :closable="tagsStore.tags.length > 1"
       @click="handleTagClick(tag.path)"
