@@ -28,9 +28,7 @@ export async function resetRouter() {
 }
 
 export async function addDynamicRoutes() {
-  removeToken()
   const token = getToken()
-  console.log({ token, is: isNullOrWhitespace(token) })
 
   // 没有token情况
   if (isNullOrWhitespace(token)) {
@@ -42,17 +40,13 @@ export async function addDynamicRoutes() {
   try {
     const userStore = useUserStore()
     const permissionStore = usePermissionStore()
-    console.log(111, { userStore, permissionStore }, userStore.userId)
     !userStore.userId && (await userStore.getUserInfo())
-    console.log(222, { userStore })
     const accessRoutes = permissionStore.generateRoutes(userStore.role)
-    console.log(333, { accessRoutes })
     accessRoutes.forEach((route) => {
       !router.hasRoute(route.name) && router.addRoute(route)
     })
     router.hasRoute(EMPTY_ROUTE.name) && router.removeRoute(EMPTY_ROUTE.name)
     router.addRoute(NOT_FOUND_ROUTE)
-    console.log(222, { router })
   } catch (error) {
     console.error(error)
   }

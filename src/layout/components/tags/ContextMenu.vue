@@ -14,7 +14,6 @@
 import { useTagsStore, useAppStore } from '@/store'
 import { renderIcon } from '@/utils'
 import { useLocalStorage } from '@vueuse/core'
-
 const props = defineProps({
   show: {
     type: Boolean,
@@ -33,12 +32,9 @@ const props = defineProps({
     default: 0,
   },
 })
-
 const emit = defineEmits(['update:show'])
-
 const tagsStore = useTagsStore()
 const appStore = useAppStore()
-
 const options = computed(() => [
   {
     label: '重新加载',
@@ -71,7 +67,6 @@ const options = computed(() => [
     icon: renderIcon('mdi:arrow-expand-right', { size: '14px' }),
   },
 ])
-
 const route = useRoute()
 const actionMap = new Map([
   [
@@ -109,11 +104,9 @@ const actionMap = new Map([
     },
   ],
 ])
-
 function handleHideDropdown() {
   emit('update:show', false)
 }
-
 function handleSelect(key) {
   const actionFn = actionMap.get(key)
   actionFn && actionFn()

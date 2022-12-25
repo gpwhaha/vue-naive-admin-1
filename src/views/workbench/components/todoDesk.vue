@@ -1,23 +1,23 @@
 <template>
-  <div h-auto w-auto mb-4 class="todo-contain" box-border py-2 px-4>
+  <div h-auto w-auto mb-10 class="todo-contain" box-border py-5 px-10>
     <n-collapse v-model="collapseValue" arrow-placement="right" :on-item-header-click="isOpen">
       <n-collapse-item>
         <template #header>
           <div class="title">
-            <div v-if="!collapseValue" flex justify-between items-center h-16>
-              <div font-700 text-7>我的待办</div>
-              <div w-16>展开</div>
+            <div v-if="!collapseValue" flex justify-between items-center h-34>
+              <div font-700 text-16>我的待办</div>
+              <div w-34>展开</div>
             </div>
 
-            <div v-else flex justify-between items-center h-16>
+            <div v-else flex justify-between items-center h-34>
               <div flex items-center @click.stop>
                 <n-tabs type="line" :size="size" animated @update:value="handleUpdateValue">
                   <n-tab-pane name="1" :tab="`待审批合同（${toCheckCount}）`"> </n-tab-pane>
                   <n-tab-pane name="2" :tab="`待履约合同（${toHonrkCount}）`"></n-tab-pane>
                 </n-tabs>
 
-                <div ml-4 flex>
-                  <div w-24>共 {{ totalCount }} 条</div>
+                <div ml-10 flex>
+                  <div w-50>共 {{ totalCount }} 条</div>
                   <n-pagination
                     v-model:page="search.pageNo"
                     :page-count="pageCount"
@@ -29,12 +29,12 @@
                   </n-pagination>
                 </div>
               </div>
-              <div w-16>关闭</div>
+              <div w-34>关闭</div>
             </div>
           </div>
         </template>
         <div>
-          <n-data-table :style="{ height: `34rem` }" flex-height :columns="columns" :data="tableData" />
+          <n-data-table :style="{ height: `82rem` }" flex-height :columns="columns" :data="tableData" />
         </div>
       </n-collapse-item>
     </n-collapse>

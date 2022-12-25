@@ -4,7 +4,7 @@
       v-for="tag in tagsStore.tags"
       ref="tabRefs"
       :key="tag.path"
-      class="px-5 mx-2 rounded-4 cursor-pointer hover:color-primary"
+      class="px-15 mx-5 rounded-4 cursor-pointer hover:color-primary"
       :type="tagsStore.activeTag === tag.path ? 'primary' : 'default'"
       :closable="tagsStore.tags.length > 1"
       @click="handleTagClick(tag.path)"
@@ -27,20 +27,17 @@
 import ContextMenu from './ContextMenu.vue'
 import { useTagsStore } from '@/store'
 import ScrollX from '@/components/common/ScrollX.vue'
-
 const route = useRoute()
 const router = useRouter()
 const tagsStore = useTagsStore()
 const tabRefs = ref([])
 const scrollXRef = ref(null)
-
 const contextMenuOption = reactive({
   show: false,
   x: 0,
   y: 0,
   currentPath: '',
 })
-
 watch(
   () => route.path,
   () => {
@@ -50,7 +47,6 @@ watch(
   },
   { immediate: true }
 )
-
 watch(
   () => tagsStore.activeIndex,
   async (activeIndex) => {
@@ -62,12 +58,10 @@ watch(
   },
   { immediate: true }
 )
-
 const handleTagClick = (path) => {
   tagsStore.setActiveTag(path)
   router.push(path)
 }
-
 function showContextMenu() {
   contextMenuOption.show = true
 }
@@ -77,7 +71,6 @@ function hideContextMenu() {
 function setContextMenu(x, y, currentPath) {
   Object.assign(contextMenuOption, { x, y, currentPath })
 }
-
 // 右击菜单
 async function handleContextMenu(e, tagItem) {
   const { clientX, clientY } = e
@@ -87,7 +80,6 @@ async function handleContextMenu(e, tagItem) {
   showContextMenu()
 }
 </script>
-
 <style>
 .n-tag__close {
   box-sizing: content-box;

@@ -1,4 +1,4 @@
-import request from '@/utils/http'
+import { request } from '@/utils'
 
 export const getMyPlanStatistics = (data) => request.get('/contract/perform/myPlanStatistics', data)
 

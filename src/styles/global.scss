@@ -1,5 +1,7 @@
 html {
-  font-size: 16px; // * 1rem = 4px  方便unocss计算：在unocss中 1字体单位 = 0.25rem，相当于 1等份 = 1px
+  font-size: 4px;
+  width: 100%;
+  height: 100%;
 
   &.dark {
     filter: invert(1);
@@ -17,8 +19,8 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
+  font-size: 4px;
   overflow: hidden;
-  font-size: 16px;
   background-color: #f2f2f2;
   font-family: 'Encode Sans Condensed', sans-serif;
   font-size: calc(max(12px, min(32px, calc(#{$maxWidth} / #{$width} * 16))) * 0.625);

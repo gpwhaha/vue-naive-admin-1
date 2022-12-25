@@ -2,7 +2,7 @@ import { getMyApproval, getMyPerform } from '../api'
 import { h } from 'vue'
 import { NButton } from 'naive-ui'
 import { formatDateTime } from '@/utils'
-import { renderIcon } from '@/utils/icon'
+import { renderIcon } from '@/utils'
 
 export const useTodoDesk = () => {
   //ref数据

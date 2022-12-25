@@ -1,8 +1,8 @@
 <template>
   <AppPage :show-footer="true">
     <money-cards></money-cards>
-    <div flex w-auto>
-      <div class="left" flex flex-col mr-8>
+    <div flex w-auto my-8>
+      <div class="left" flex flex-col mr-18>
         <todoDesk></todoDesk>
         <AiCreate></AiCreate>
       </div>
@@ -12,7 +12,7 @@
       </div>
     </div>
     <div flex-1>
-      <n-card rounded-10>
+      <n-card rounded-12>
         <div flex items-center>
           <img rounded-full width="60" :src="userStore.avatar" />
           <div ml-10>

@@ -15,16 +15,16 @@ export function resolveResError(code, message) {
       message = message ?? '请求参数错误'
       break
     case 401:
-      message = message ?? '登录已过期'
       useUserStore().logout()
+      message = message ?? '登录已过期'
       break
     case 20021:
-      message = message ?? '登录已过期'
       useUserStore().logout()
+      message = message ?? '登录已过期'
       break
     case 20022:
-      message = message ?? '当前账号在其他终端登录，请注意安全'
       useUserStore().logout()
+      message = message ?? '当前账号在其他终端登录，请注意安全'
       break
     case 403:
       message = message ?? '没有权限'

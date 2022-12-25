@@ -62,7 +62,7 @@ export const useMoneyCards = () => {
         $message.error(msg)
       }
     } catch (e) {
-      $message.error(e)
+      $message.error(e.error)
     }
   }
 

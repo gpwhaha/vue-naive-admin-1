@@ -1,4 +1,4 @@
-import { getToken, uuid } from '@/utils'
+import { getToken, uuid, is } from '@/utils'
 import { hex_sha1 } from '@/utils/common/sha'
 import { resolveResError } from './helpers'
 
@@ -9,13 +9,12 @@ function queryVal(val) {
 }
 
 export function reqResolve(config) {
-  // 防止缓存，给get请求加上时间戳
-  if (config.method === 'get') {
-    config.params = {
-      ...config.params,
-      t: new Date().getTime(),
-    }
-  }
+  // // 防止缓存，给get请求加上时间戳
+  // if (config.method === 'get') {
+  //   config.params = {
+  //     ...config.params,
+  //   }
+  // }
 
   // 处理不需要token的请求
   if (config.noNeedToken) {
@@ -75,25 +74,18 @@ export function reqReject(error) {
 export function resResolve(response) {
   // TODO: 处理不同的 response.headers
   const { data, status, config, statusText } = response
-  if ((response.data?.code !== 0 || response.data?.code !== 200) && status !== 200) {
-    if (data?.code !== 0) {
-      const code = data?.code ?? status
-      /** 根据code处理对应的操作，并返回处理后的message */
-      const message = resolveResError(code, data?.msg ?? statusText)
-
-      /** 需要错误提醒 */
-      !config.noNeedTip && $message.error(message)
-      return Promise.reject({ code, message, error: response?.data })
-    } else if (['1', 20021, 20022].includes(data?.code)) {
-      const code = data?.code ?? status
-      /** 根据code处理对应的操作，并返回处理后的message */
-      const message = resolveResError(code, data?.msg || data?.message || statusText)
-      /** 需要错误提醒 */
-      $message.error(message)
-      return Promise.reject({ code, message, error: response?.data })
+  /**文件流直接返回 */
+  if (is(data, 'Blob') && status === 200) {
+    return Promise.resolve(data)
+  } else if (data?.code !== 0) {
+    const code = data?.code ?? status
+    /** 根据code处理对应的操作，并返回处理后的message */
+    const message = resolveResError(code, data?.msg ?? statusText)
+    /** 需要错误提醒 --异步处理下，防止拿不到message消息对象 */
+    setTimeout(() => {
       !config.noNeedTip && window.$message?.error(message)
-      return Promise.reject({ code, message, error: data || response })
-    }
+    }, 20)
+    return Promise.reject({ code, message, error: response?.data })
   }
   return Promise.resolve(data)
 }
@@ -110,6 +102,6 @@ export function resReject(error) {
   const code = data?.code ?? status
   const message = resolveResError(code, data?.message ?? error.message)
   /** 需要错误提醒 */
-  !config?.noNeedTip && window.$message?.error(message)
+  !config?.noNeedTip && $message?.error(message)
   return Promise.reject({ code, message, error: error.response?.data || error.response })
 }

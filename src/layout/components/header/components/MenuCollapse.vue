@@ -7,6 +7,5 @@
 
 <script setup>
 import { useAppStore } from '@/store'
-
 const appStore = useAppStore()
 </script>
