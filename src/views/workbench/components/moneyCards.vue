@@ -12,7 +12,7 @@
         :style="{ backgroundImage: `url(${item.src})` }"
         class="content"
       >
-        <div font-700 text-26 color-teal-300 hover-text-32 :style="{ color: item.color }">{{ item.money }}</div>
+        <div font-700 text-26 color-teal-300 hover-text-32 mt-10 :style="{ color: item.color }">{{ item.money }}</div>
         <div font-700 text-16>{{ item.name }}</div>
       </div>
     </n-card>

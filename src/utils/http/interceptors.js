@@ -9,13 +9,6 @@ function queryVal(val) {
 }
 
 export function reqResolve(config) {
-  // // 防止缓存，给get请求加上时间戳
-  // if (config.method === 'get') {
-  //   config.params = {
-  //     ...config.params,
-  //   }
-  // }
-
   // 处理不需要token的请求
   if (config.noNeedToken) {
     return config

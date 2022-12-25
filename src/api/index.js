@@ -17,4 +17,12 @@ export default {
       noNeedToken: true,
       noNeedTip: true,
     }),
+  getFileImg: (templateId) =>
+    request({
+      url: `contract/template/img/${templateId}`,
+      responseType: 'blob',
+      method: 'get',
+    }),
+  createContract: (data) => request.post(`/contract/createContractBase`, data),
+  queryDraftDetail: (contractId) => request.post(`/contract/draft/queryDraftDetail/${contractId}`),
 }

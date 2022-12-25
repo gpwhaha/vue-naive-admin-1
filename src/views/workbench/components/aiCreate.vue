@@ -1,12 +1,161 @@
 <template>
   <div flex-1 w-auto p-10 class="todo-contain">
-    <div font-700 text-16>智能起草</div>
+    <div flex w-full justify-between>
+      <div font-700 text-16>智能起草</div>
+      <div cursor-pointer @click="toMore">查看更多专业范本</div>
+    </div>
+    <n-spin :show="loading">
+      <div class="list">
+        <div class="item-box">
+          <div class="item" @click="toCreate">
+            <TheIcon icon="ep:plus" :size="50" color="#999999"></TheIcon>
+          </div>
+          <div class="file-name">在线起草合同</div>
+        </div>
+        <div v-for="(item, index) in fileList.slice(0, 9)" :key="index" class="item-box">
+          <div class="item">
+            <div class="ribbon" :style="tagStyle(item)">
+              <span>{{ tagName(item) }}</span>
+            </div>
+            <div class="img">
+              <img style="width: 100%; height: 100%" :src="item.url" />
+            </div>
+            <div class="monolayer">
+              <div></div>
+              <div class="preview-box" @click="handleDetail(item)">
+                <i class="el-icon-search"></i>
+                <span>预览</span>
+              </div>
+              <div class="bottom-text" @click="handleSuccessTemplate(item)">立即使用</div>
+            </div>
+          </div>
+          <div class="file-name" :title="item.templateName">
+            {{ item.templateName }}
+          </div>
+        </div>
+      </div>
+    </n-spin>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import { useCreate } from './useCreate'
+const { loading, fileList, load, tagStyle, tagName, toMore, toCreate, handleDetail, handleSuccessTemplate } =
+  useCreate()
+onMounted(() => {
+  load()
+})
+</script>
 <style lang="scss">
 .todo-contain {
   background-color: #fff;
   border-radius: 1rem;
+
+  .list {
+    width: 98%;
+    height: 96%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    // grid-gap: 6rem;
+    grid-column-gap: 6rem;
+    padding: 1rem;
+
+    .item-box {
+      .item {
+        width: 100%;
+        height: 64rem;
+        border: #cacaca 1px solid;
+        border-radius: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+
+        .monolayer {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.4);
+          z-index: -1;
+        }
+
+        &:hover {
+          .monolayer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            .preview-box {
+              color: #0a79fa;
+              font-size: 4rem;
+              & span {
+                margin-left: 1rem;
+              }
+            }
+            .bottom-text {
+              width: 100%;
+              height: 12rem;
+              line-height: 12rem;
+              color: #0a79fa;
+              font-size: 3.5rem;
+              text-align: center;
+              background-color: rgba(40, 120, 255, 0.2);
+            }
+          }
+        }
+        .add-icon {
+          font-size: 5rem;
+          color: #cacaca;
+        }
+        .ribbon {
+          /* 右上角飘带 */
+          background-color: #dbb255; /* 左上角飘带的背景颜色 */
+          background-image: linear-gradient(#f4d177, #dbb255);
+          overflow: hidden;
+          white-space: nowrap; /* 文字不换行*/
+          position: absolute; /* 绝对定位 */
+          right: -40px;
+          top: 10px;
+          transform: rotate(45deg); /* 旋转45°*/
+          z-index: 999;
+        }
+
+        .ribbon span {
+          //border: 1px solid #54cbff;
+          color: #fff;
+          display: block;
+          font: bold 100% 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          font-size: 3.5rem;
+          margin: 1px 0;
+          padding: 2px 50px;
+          text-align: center;
+          text-shadow: 0 0 5px #aba4a4;
+        }
+
+        .img {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      .file-name {
+        width: 48rem;
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
 }
 </style>
