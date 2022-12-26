@@ -1,9 +1,9 @@
 <template>
-  <div h-auto w-auto mb-10 class="todo-contain" box-border py-5 px-10>
+  <div h-auto w-auto mb-10 rounded-6 bg-white box-border py-5 px-10>
     <n-collapse v-model="collapseValue" arrow-placement="right" :on-item-header-click="isOpen">
       <n-collapse-item>
         <template #header>
-          <div class="title">
+          <div w-full>
             <div v-if="!collapseValue" flex justify-between items-center h-34>
               <div font-700 text-16>我的待办</div>
               <div w-34>展开</div>
@@ -64,12 +64,4 @@ onBeforeMount(() => {
   initTableData()
 })
 </script>
-<style lang="scss">
-.todo-contain {
-  background-color: #fff;
-  border-radius: 1rem;
-  .title {
-    width: 100%;
-  }
-}
-</style>
+<style lang="scss"></style>

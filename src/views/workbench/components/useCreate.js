@@ -43,9 +43,12 @@ export const useCreate = () => {
     if (!id) return null
     let binaryData = []
     const data = await api.getFileImg(id)
-    binaryData.push(data)
-    let url = window.URL.createObjectURL(new Blob(binaryData))
-    return Promise.resolve(url)
+    if (data?.size > 0) {
+      binaryData.push(data)
+      let url = window.URL.createObjectURL(new Blob(binaryData))
+      return Promise.resolve(url)
+    }
+    return Promise.resolve(null)
   }
 
   function tagStyle(item) {

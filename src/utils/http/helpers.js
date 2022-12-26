@@ -19,6 +19,10 @@ export function resolveResError(code, message) {
       useUserStore().logout()
       message = message || '登录已过期'
       break
+    case 20002:
+      useUserStore().logout()
+      message = message || '身份验证失败!'
+      break
     case 20021:
       useUserStore().logout()
       message = message || '登录已过期'

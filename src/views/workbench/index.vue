@@ -2,7 +2,7 @@
   <AppPage :show-footer="true">
     <money-cards></money-cards>
     <div flex w-auto my-8>
-      <div class="left" flex flex-col mr-18>
+      <div class="left" flex flex-col mr-12>
         <todoDesk></todoDesk>
         <AiCreate></AiCreate>
       </div>

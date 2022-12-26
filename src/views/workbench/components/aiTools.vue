@@ -1,5 +1,5 @@
 <template>
-  <div w-auto mb-10 p-10 class="todo-contain">
+  <div w-auto mb-10 p-10 rounded-6 bg-white>
     <div font-700 text-16>智能工具</div>
     <div text-12 my-5 color-gray-500>多种智能工具提高流程效率，节约时间成本</div>
     <div bg-no-repeat bg-cover h-90 w-auto rounded-12 my-8 :style="{ backgroundImage: `url(${AiCheck})` }">
@@ -26,9 +26,4 @@
 import AiCheck from '@/assets/images/aiCheck.png'
 import AiCompare from '@/assets/images/aiCompare.png'
 </script>
-<style lang="scss">
-.todo-contain {
-  background-color: #fff;
-  border-radius: 1rem;
-}
-</style>
+<style lang="scss"></style>
