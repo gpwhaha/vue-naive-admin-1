@@ -14,6 +14,7 @@ export default {
         title: '工作台',
         icon: 'mdi:home',
         order: 0,
+        keepAlive: true,
       },
     },
   ],

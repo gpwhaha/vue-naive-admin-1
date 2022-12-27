@@ -39,16 +39,16 @@ export const useUserStore = defineStore('user', {
     }) {
       username = username.trim()
       return new Promise(async (resolve, reject) => {
-        const data = await api.getPublicKey()
-        const jsencrypt = new JSEncrypt()
-        jsencrypt.setPublicKey(data.data)
-        username = encodeURI(jsencrypt.encryptLong(username))
-        password = encodeURI(jsencrypt.encryptLong(password))
-        if (!isEncrypt) {
-          extra = encodeURI(jsencrypt.encryptLong(extra))
-        }
-        api
-          .loginIn({
+        try {
+          const data = await api.getPublicKey()
+          const jsencrypt = new JSEncrypt()
+          jsencrypt.setPublicKey(data.data)
+          username = encodeURI(jsencrypt.encryptLong(username))
+          password = encodeURI(jsencrypt.encryptLong(password))
+          if (!isEncrypt) {
+            extra = encodeURI(jsencrypt.encryptLong(extra))
+          }
+          const res = await api.loginIn({
             username,
             password,
             extra,
@@ -59,10 +59,11 @@ export const useUserStore = defineStore('user', {
             code,
             verifyCode,
           })
-          .then((res) => {
-            resolve(res)
-            this.token = res.token
-          })
+          resolve(res)
+          this.token = res.token
+        } catch (error) {
+          reject(error)
+        }
       })
     },
 
