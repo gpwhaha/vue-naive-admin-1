@@ -1,5 +1,5 @@
 <template>
-  <QueryBar v-if="$slots.queryBar" mb-30 @search="handleSearch" @reset="handleReset">
+  <QueryBar v-if="$slots.queryBar" mb-5 @search="handleSearch" @reset="handleReset">
     <slot name="queryBar" />
   </QueryBar>
 
@@ -88,7 +88,6 @@ async function handleQuery() {
       paginationParams = { begin: pagination.page, pageSize: pagination.pageSize }
     }
     const { data } = await props.getData({ ...props.queryItems, ...props.extraParams, ...paginationParams })
-    console.log(233, data)
     tableData.value = data?.data || data
     pagination.itemCount = data.total ?? data.length
   } catch (error) {

@@ -2,27 +2,27 @@
   <AppPage :show-footer="true" bg-cover :style="{ backgroundImage: `url(${bgImg})` }">
     <div
       style="transform: translateY(25px)"
-      class="m-auto p-15 f-c-c min-w-345 max-w-700 rounded-10 card-shadow bg-white bg-opacity-60"
+      class="m-auto p-5 f-c-c min-w-220 max-w-380 rounded-6 card-shadow bg-white bg-opacity-60"
     >
-      <div w-380 hidden md:block px-20 py-35>
+      <div w-140 hidden md:block px-5 py-5>
         <img src="@/assets/images/login_banner.webp" w-full alt="login_banner" />
       </div>
 
-      <div w-320 flex-col px-20 py-35>
-        <h5 f-c-c text-24 font-normal color="#6a6a6a"><icon-custom-logo mr-10 text-50 color-primary />{{ title }}</h5>
-        <div mt-30>
+      <div w-130 flex-col px-10 py-15>
+        <h5 f-c-c text-9 font-normal color="#6a6a6a"><icon-custom-logo mr-10 text-20 color-primary />{{ title }}</h5>
+        <div mt-10>
           <n-input
             v-model:value="loginInfo.name"
             autofocus
-            class="text-16 items-center h-50 pl-10"
+            class="text-7 items-center h-18 pl-6"
             placeholder="admin"
             :maxlength="20"
           />
         </div>
-        <div mt-30>
+        <div mt-10>
           <n-input
             v-model:value="loginInfo.password"
-            class="text-16 items-center h-50 pl-10"
+            class="text-7 items-center h-18 pl-6"
             type="password"
             show-password-on="mousedown"
             placeholder="123456"
@@ -31,25 +31,25 @@
           />
         </div>
 
-        <div v-if="showGraphicsCode" mt-30>
+        <div v-if="showGraphicsCode" mt-10>
           <n-input v-model:value="loginInfo.verifyCode" placeholder="请输入验证码">
             <template #suffix>
               <img
                 v-if="valiCodeUrl"
                 :src="valiCodeUrl"
-                style="cursor: pointer; width: 20rem; height: 90%"
+                style="cursor: pointer; width: 15rem; height: 90%"
                 @click="getCode"
               />
             </template>
           </n-input>
         </div>
 
-        <div mt-20>
+        <div mt-10>
           <n-checkbox :checked="isRemember" label="记住我" :on-update:checked="(val) => (isRemember = val)" />
         </div>
 
-        <div mt-20>
-          <n-button w-full h-50 rounded-5 text-16 type="primary" :loading="loading" @click="handleLogin">
+        <div mt-10>
+          <n-button w-full h-18 rounded-2 text-6 type="primary" :loading="loading" @click="handleLogin">
             登录
           </n-button>
         </div>

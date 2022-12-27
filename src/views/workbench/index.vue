@@ -1,8 +1,8 @@
 <template>
   <AppPage :show-footer="true">
     <money-cards></money-cards>
-    <div flex w-auto my-8>
-      <div class="left" flex flex-col mr-12>
+    <div flex w-auto my-4>
+      <div class="left" flex flex-col mr-6>
         <todoDesk></todoDesk>
         <AiCreate></AiCreate>
       </div>
@@ -11,67 +11,17 @@
         <FileHonr></FileHonr>
       </div>
     </div>
-    <div flex-1>
-      <n-card rounded-12>
-        <div flex items-center>
-          <img rounded-full width="60" :src="userStore.avatar" />
-          <div ml-10>
-            <p text-8>Hello, {{ userStore.name }}</p>
-            <p mt-5 text-8 op-60>今天又是元气满满的一天</p>
-          </div>
-          <div ml-auto flex items-center>
-            <n-statistic label="待办" :value="4">
-              <template #suffix> / 10 </template>
-            </n-statistic>
-            <n-statistic label="Stars" w-100 ml-80>
-              <a href="https://github.com/zclzone/vue-naive-admin">
-                <img allt="stars" src="https://badgen.net/github/stars/zclzone/vue-naive-admin" />
-              </a>
-            </n-statistic>
-            <n-statistic label="Forks" w-100 ml-80>
-              <a href="https://github.com/zclzone/vue-naive-admin">
-                <img allt="forks" src="https://badgen.net/github/forks/zclzone/vue-naive-admin" />
-              </a>
-            </n-statistic>
-          </div>
-        </div>
-      </n-card>
-
-      <n-card title="项目" size="small" :segmented="true" mt-5 rounded-10>
-        <template #header-extra>
-          <n-button text type="primary">更多</n-button>
-        </template>
-        <div flex flex-wrap justify-between>
-          <n-card
-            v-for="i in 10"
-            :key="i"
-            class="w-300 flex-shrink-0 mt-10 mb-10 cursor-pointer"
-            hover:card-shadow
-            title="Vue Naive Admin"
-            size="small"
-          >
-            <p op-60>一个基于 Vue3.0、Vite、Naive UI 的轻量级后台管理模板</p>
-          </n-card>
-          <div w-300 h-0></div>
-          <div w-300 h-0></div>
-          <div w-300 h-0></div>
-          <div w-300 h-0></div>
-        </div>
-      </n-card>
-    </div>
+    <NumEchart></NumEchart>
   </AppPage>
 </template>
 
 <script setup>
-// import { useUserStore } from '@/store'
 import moneyCards from './components/moneyCards.vue'
 import todoDesk from './components/todoDesk.vue'
 import AiCreate from './components/aiCreate.vue'
 import AiTools from './components/aiTools.vue'
 import FileHonr from './components/fileHonr.vue'
-import { useUserStore } from '@/store/modules/user'
-
-const userStore = useUserStore()
+import NumEchart from './components/echart.vue'
 </script>
 
 <style lang="scss">

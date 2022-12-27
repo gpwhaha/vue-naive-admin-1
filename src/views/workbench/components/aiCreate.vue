@@ -1,8 +1,8 @@
 <template>
-  <div flex-1 w-auto p-10 rounded-6 bg-white>
+  <div flex-1 w-auto p-4 rounded-2 bg-white>
     <div flex w-full justify-between>
-      <div font-700 text-16>智能起草</div>
-      <div cursor-pointer color-gray @click="toMore">查看更多专业范本</div>
+      <div font-700 text-7>智能起草</div>
+      <div cursor-pointer text-5 color-gray @click="toMore">查看更多专业范本</div>
     </div>
     <n-spin :show="loading">
       <div class="list">
@@ -55,20 +55,20 @@ onMounted(() => {
 </script>
 <style lang="scss">
 .list {
-  width: 98%;
-  height: 96%;
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   // grid-gap: 6rem;
-  grid-column-gap: 6rem;
+  grid-column-gap: 3rem;
   padding: 1rem;
 
   .item-box {
     .item {
       width: 100%;
-      height: 64rem;
+      height: 26rem;
       border: #cacaca 1px solid;
-      border-radius: 2rem;
+      border-radius: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -97,17 +97,17 @@ onMounted(() => {
           align-items: center;
           .preview-box {
             color: #0a79fa;
-            font-size: 4rem;
+            font-size: 1.6rem;
             & span {
               margin-left: 1rem;
             }
           }
           .bottom-text {
             width: 100%;
-            height: 12rem;
-            line-height: 12rem;
+            height: 5rem;
+            line-height: 5rem;
             color: #0a79fa;
-            font-size: 3.5rem;
+            font-size: 1.6rem;
             text-align: center;
             background-color: rgba(40, 120, 255, 0.2);
           }
@@ -135,7 +135,7 @@ onMounted(() => {
         color: #fff;
         display: block;
         font: bold 100% 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 3.5rem;
+        font-size: 1.5rem;
         margin: 1px 0;
         padding: 2px 50px;
         text-align: center;
@@ -151,10 +151,10 @@ onMounted(() => {
       }
     }
     .file-name {
-      width: 48rem;
+      width: 18rem;
       text-align: center;
-      margin: 1.5rem 0;
-      font-size: 3rem;
+      margin: 1rem 0;
+      font-size: 1.4rem;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
