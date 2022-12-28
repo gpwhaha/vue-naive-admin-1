@@ -51,17 +51,6 @@ export const useCreate = () => {
     return Promise.resolve(null)
   }
 
-  function tagStyle(item) {
-    let color = {
-      0: ['#f4d177', '#dbb255', '精选'],
-      1: ['#3b8bea', '#0a79fa', '官方'],
-      2: ['#4dc34d', '#0d990d', '内部'],
-    }
-    return {
-      backgroundImage: `linear-gradient( {color[item.tag][0]},  {color[item.tag][1]})`,
-    }
-  }
-
   function handleDetail(row) {
     router.push({
       name: 'previewFile',
@@ -130,6 +119,17 @@ export const useCreate = () => {
     router.push({
       name: 'contractCreate',
     })
+  }
+
+  function tagStyle(item) {
+    let color = {
+      0: ['#f4d177', '#dbb255', '精选'],
+      1: ['#3b8bea', '#0a79fa', '官方'],
+      2: ['#4dc34d', '#0d990d', '内部'],
+    }
+    return {
+      backgroundImage: `linear-gradient( {color[item.tag][0]},  {color[item.tag][1]})`,
+    }
   }
 
   function tagName(item) {

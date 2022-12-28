@@ -10,7 +10,7 @@
           <div class="item" @click="toCreate">
             <TheIcon icon="ep:plus" :size="50" color="#999999"></TheIcon>
           </div>
-          <div class="file-name">在线起草合同</div>
+          <div text-center text-5 my-3 font-700>在线起草合同</div>
         </div>
         <div v-for="(item, index) in fileList.slice(0, 9)" :key="index" class="item-box">
           <div class="item">
@@ -20,12 +20,6 @@
             <div class="img">
               <img v-if="item.url" w-full h-full :src="item.url" />
               <img v-else w-full :src="fileLoadFail" />
-              <!-- <n-image
-                preview-disabled
-                style="width: 100%; height: 100%"
-                :src="item.url"
-                :fallback-src="fileLoadFail"
-              /> -->
             </div>
             <div class="monolayer">
               <div></div>
@@ -36,8 +30,8 @@
               <div class="bottom-text" @click="handleSuccessTemplate(item)">立即使用</div>
             </div>
           </div>
-          <div class="file-name" :title="item.templateName">
-            {{ item.templateName }}
+          <div text-center text-5 my-3>
+            <n-ellipsis style="max-width: 18rem"> {{ item.templateName }}</n-ellipsis>
           </div>
         </div>
       </div>

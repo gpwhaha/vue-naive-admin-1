@@ -8,7 +8,7 @@ export default {
   meta: {
     title: '基础功能',
     icon: 'majesticons:compass-line',
-    order: 1,
+    order: 2,
   },
   children: [
     {

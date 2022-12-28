@@ -149,7 +149,7 @@ async function handleLogin() {
       $message.warning(res.msg)
     }
   } catch (error) {
-    console.error(error, '111')
+    console.error(error)
     $message.removeMessage()
   } finally {
     loading.value = false

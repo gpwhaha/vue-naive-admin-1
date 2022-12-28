@@ -23,7 +23,7 @@ export default {
       responseType: 'blob',
       method: 'get',
     }),
-  createContract: (data) => request.post(`/contract/createContractBase`, data) /** 智能起草-创建 */,
+  createContract: (data) => request.post(`/contract/draft/create`, data) /** 智能起草-创建 */,
   queryDraftDetail: (contractId) =>
     request.post(`/contract/draft/queryDraftDetail/${contractId}`) /** 智能起草-查询合同信息 */,
   delPerformFile: (data) => request.post(`contract/perform/delPerformFile`, data) /** 删除文件（服务器） */,
