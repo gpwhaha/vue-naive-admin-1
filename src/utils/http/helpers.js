@@ -8,7 +8,7 @@ export function addBaseParams(params) {
 }
 
 export function resolveResError(code, message) {
-  switch (code) {
+  switch (Number(code)) {
     case 1:
       message = message || '网络较差'
       break

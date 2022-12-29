@@ -1,4 +1,4 @@
-import { request } from '@/utils'
+import { request, yozoRequest } from '@/utils'
 
 export default {
   getUser: () => request.get('/user'),
@@ -6,6 +6,12 @@ export default {
   loginIn: (data) => request.post('/web/loginSystemForWeb', data, { noNeedToken: true }),
   getPublicKey: () => request.post('/web/loadPublicKey', null, { noNeedToken: true }),
   getUserInfo: () => request.post('/web/queryCurrentUser'),
+  getOfficeUrl: (data) =>
+    yozoRequest({
+      url: '/api.do',
+      method: 'post',
+      params: data,
+    }) /** 合同管理-导入批量合同 */,
   getLoginCode: (vcodeKey) =>
     request({
       url: '/web/getLoginCode',

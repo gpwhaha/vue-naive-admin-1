@@ -24,5 +24,17 @@ export default {
         keepAlive: true,
       },
     },
+    {
+      name: 'previewFile',
+      path: 'previewFile',
+      component: () => import('./filePreview.vue'),
+      isHidden: true,
+      meta: {
+        title: '合同预览',
+        icon: 'mdi:book-open',
+        order: 0,
+        keepAlive: true,
+      },
+    },
   ],
 }

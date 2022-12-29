@@ -22,20 +22,18 @@
       <n-collapse arrow-placement="right">
         <n-collapse-item title="青铜" name="1">
           <template #header>
-            <n-scrollbar x-scrollable>
-              <div w-full flex items-center mr-30 @click.stop>
-                <div
-                  v-for="type in templateTypeList.slice(0, 10)"
-                  :key="type.typeId"
-                  class="menu_item"
-                  :class="{ active: chooseTypeId === type.typeId }"
-                  type="primary"
-                  @click="chooseType(type)"
-                >
-                  {{ type.typeName }}
-                </div>
+            <div class="cus-scroll-x" w-full flex items-center mr-30 @click.stop>
+              <div
+                v-for="type in templateTypeList.slice(0, 10)"
+                :key="type.typeId"
+                class="menu_item"
+                :class="{ active: chooseTypeId === type.typeId }"
+                type="primary"
+                @click="chooseType(type)"
+              >
+                {{ type.typeName }}
               </div>
-            </n-scrollbar>
+            </div>
           </template>
           <div w-full flex>
             <div
@@ -82,7 +80,7 @@
       />
     </div>
     <n-spin :show="loading">
-      <div class="list">
+      <div v-if="tableData.length > 0" class="list">
         <div v-for="(item, index) in tableData" :key="index" class="item-box">
           <div class="item">
             <div class="ribbon" :style="tagStyle(item)">
@@ -101,32 +99,39 @@
               <div class="bottom-text" @click="handleSuccessTemplate(item)">立即使用</div>
             </div>
           </div>
-          <div text-center text-5 my-3>
-            <n-ellipsis style="max-width: 18rem"> {{ item.templateName }}</n-ellipsis>
+          <div flex items-center my-2>
+            <n-rate
+              v-model:value="item.rate"
+              :count="1"
+              size="small"
+              clearable
+              @update:value="(val) => handleStart(val, item)"
+            />
+            <n-ellipsis ml-2 style="max-width: 18rem"> {{ item.templateName }}</n-ellipsis>
+          </div>
+          <div v-if="item.lastUseDate" flex items-center my-2>
+            <div rounded h-2 w-2 bg-gray-500 mx-2></div>
+            <n-ellipsis ml-2 style="max-width: 18rem"> {{ `${getDateDiff(item.lastUseDate)}有人使用过` }}</n-ellipsis>
           </div>
         </div>
       </div>
-      <div w-full flex justify-between>
-        <div></div>
-        <div>
-          <n-pagination
-            v-model:page="search.pageNo"
-            v-model:page-size="search.pageSize"
-            :page-count="pageCount"
-            :page-sizes="[12, 24, 36, 48]"
-            show-quick-jumper
-            show-size-picker
-            @update:page="handlePageNoChange"
-            @update:page-size="handleSizeChange"
-          />
-        </div>
-      </div>
+      <emptyData v-else></emptyData>
+      <pagination
+        :page-no="search.pageNo"
+        :page-size="search.pageSize"
+        :page-count="pageCount"
+        :page-sizes="[12, 24, 36, 48]"
+        @page-change="handlePageNoChange"
+        @size-change="handleSizeChange"
+      >
+      </pagination>
     </n-spin>
   </CommonPage>
 </template>
 
 <script setup>
 import fileLoadFail from '@/assets/images/seal-load-fail.png'
+import { getDateDiff } from '@/utils'
 import api from '@/api/index'
 import {
   searchMyConvert,
@@ -137,7 +142,8 @@ import {
   searchMyCollection,
   getContractType,
 } from './api'
-let search = reactive({
+const router = useRouter()
+const search = reactive({
   templateName: '',
   templateType: '',
   categoryId: null,
@@ -208,19 +214,31 @@ function searchChild() {
   load()
 }
 
+async function handleStart(val, item) {
+  if (val === 1) {
+    await addCollect(item.templateId)
+  } else {
+    await cancelCollect(item.templateId)
+  }
+
+  //展示合同
+  if (currentType.value === 1) {
+    loadMyTemplates()
+  } else if (currentType === 2) {
+    loadMyCollections()
+  } else {
+    load()
+  }
+}
 async function addCollect(templateId) {
-  const {
-    data: { code, msg },
-  } = await addCollection({ templateId })
+  const { code, msg } = await addCollection({ templateId })
   if (code !== 0) {
     $message.error(msg)
   }
 }
 
 async function cancelCollect(templateId) {
-  const {
-    data: { code, msg },
-  } = await removeCollection({ templateId })
+  const { code, msg } = await removeCollection({ templateId })
   if (code !== 0) {
     $message.error(msg)
   }
@@ -232,7 +250,6 @@ function handleDetail(row) {
     query: {
       contractId: row.contractId,
       fileTitle: row.templateName,
-      form: row,
       fileId: row.fileId,
       officeFilePath: row.officeFilePath,
       edit: 1,
@@ -365,15 +382,14 @@ async function getFileImg(id) {
 
 //重置
 function handleReset() {
-  search = {
-    templateName: '',
-    templateType: '',
-    categoryId: '',
-    year: '',
-    publishDate: null,
-    pageNo: 1,
-    pageSize: 12,
-  }
+  search.templateName = null
+  search.templateType = null
+  search.categoryId = null
+  search.year = null
+  search.tag = null
+  search.publishDate = null
+  search.pageNo = 1
+  search.pageSize = 12
   currentType.value = ''
   chooseTypeId.value = ''
   childTypeOptions.value = cacheChildTypeOptions.value
@@ -478,7 +494,7 @@ function tagStyle(item) {
     2: ['#4dc34d', '#0d990d', '内部'],
   }
   return {
-    backgroundImage: `linear-gradient( {color[item.tag][0]},  {color[item.tag][1]})`,
+    backgroundImage: `linear-gradient( ${color[item.tag][0]},  ${color[item.tag][1]})`,
   }
 }
 
@@ -488,27 +504,32 @@ function tagName(item) {
 }
 
 onMounted(async () => {
-  load()
-  const options = await getContractTypeNew()
-  let allChildType = []
-  for (const i of options) {
-    if (Array.isArray(i.child) && i.child.length > 0) {
-      let child = i.child.map((j) => {
-        return {
-          label: j.typeName,
-          value: j.typeId,
-          sort: j.sort,
-        }
-      })
-      allChildType.push(...child)
+  try {
+    loading.value = true
+    load()
+    const options = await getContractTypeNew()
+    let allChildType = []
+    for (const i of options) {
+      if (Array.isArray(i.child) && i.child.length > 0) {
+        let child = i.child.map((j) => {
+          return {
+            label: j.typeName,
+            value: j.typeId,
+            sort: j.sort,
+          }
+        })
+        allChildType.push(...child)
+      }
     }
+    templateTypeList.value = options.sort((a, b) => {
+      return a.sort - b.sort
+    })
+    templateOption.value = options
+    childTypeOptions.value = allChildType
+    cacheChildTypeOptions.value = allChildType
+  } finally {
+    loading.value = false
   }
-  templateTypeList.value = options.sort((a, b) => {
-    return a.sort - b.sort
-  })
-  templateOption.value = options
-  childTypeOptions.value = allChildType
-  cacheChildTypeOptions.value = allChildType
 })
 </script>
 
@@ -525,12 +546,12 @@ onMounted(async () => {
   border-radius: 2rem;
   cursor: pointer;
   &:hover {
-    background-color: var(--base-color);
+    background-color: var(--primary-color);
     color: #fff;
   }
 }
 .my_btn_active {
-  background-color: var(--base-color);
+  background-color: var(--primary-color);
   color: #fff;
 }
 :deep(.divider) {
@@ -555,12 +576,12 @@ onMounted(async () => {
   border-radius: 2rem;
   cursor: pointer;
   &:hover {
-    background-color: var(--base-color);
+    background-color: var(--primary-color);
     color: #fff;
   }
 }
 .active {
-  background-color: var(--base-color);
+  background-color: var(--primary-color);
   color: #fff;
 }
 

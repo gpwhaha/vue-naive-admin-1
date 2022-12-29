@@ -68,12 +68,12 @@ export function resResolve(response) {
   // TODO: 处理不同的 response.headers
   const { data, status, config, statusText } = response
   /**文件流直接返回 */
-  if (is(data, 'Blob') && status === 200) {
+  if ((is(data, 'Blob') && status === 200) || Number(data.errorCode) === 0) {
     return Promise.resolve(data)
   } else if (data?.code !== 0) {
-    const code = data?.code ?? status
+    const code = data?.code || data?.errorCode || status
     /** 根据code处理对应的操作，并返回处理后的message */
-    const message = resolveResError(code, data?.msg ?? statusText)
+    const message = resolveResError(code, data?.msg || data?.errorMessage || statusText)
     /** 需要错误提醒 --异步处理下，防止拿不到message消息对象 */
     setTimeout(() => {
       !config.noNeedTip && window.$message?.error(message)
