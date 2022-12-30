@@ -127,6 +127,12 @@
       </pagination>
     </n-spin>
   </CommonPage>
+  <uploadDrawer
+    v-model:show="showUpload"
+    :template-type-options="templateTypeOptions"
+    :template-type-list="templateTypeList"
+    @success-save="load"
+  ></uploadDrawer>
 </template>
 
 <script setup>
@@ -142,6 +148,7 @@ import {
   searchMyCollection,
   getContractType,
 } from './api'
+import uploadDrawer from './components/uploadFileDrawer.vue'
 const router = useRouter()
 const search = reactive({
   templateName: '',
