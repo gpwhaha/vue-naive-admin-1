@@ -19,7 +19,7 @@
 
 <script setup>
 import { useCRUD } from '@/composables'
-import api from '../api'
+import api from './api'
 import { NButton } from 'naive-ui'
 import { formatDate, formatDateTime, renderIcon } from '@/utils'
 

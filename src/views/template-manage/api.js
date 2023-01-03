@@ -17,3 +17,21 @@ export const getContractType = () => request.get(`contract/contractType`) //合�
 export const editTpl = (data) => request.post(`contract/template/updateTplDes`, data) //编辑合同模板
 
 export const createTpl = (data) => request.post(`contract/template/createTpl`, data) //创建合同模板
+
+export const downloadContractFile = (contractId) => {
+  return request({
+    url: `contract/downloadContractFile/${contractId}`,
+    method: 'post',
+    responseType: 'blob',
+  })
+} //下载合同
+
+export const downloadFile = (fileId) => {
+  return request({
+    url: `contract/downloadFile/${fileId}`,
+    method: 'post',
+    responseType: 'blob',
+  })
+} //下载同模板
+
+export const deleteTpl = (data) => request.post(`contract/template/deleteTemplate`, data) //创建合同模板

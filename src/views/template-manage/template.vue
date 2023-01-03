@@ -92,10 +92,26 @@
             </div>
             <div class="monolayer">
               <div></div>
-              <div class="preview-box" @click="handleDetail(item)">
-                <i class="el-icon-search"></i>
-                <span>预览</span>
+              <div>
+                <div class="preview-box" @click="handleDetail(item)">
+                  <i class="el-icon-search"></i>
+                  <span>预览</span>
+                </div>
+                <div v-if="hasPermission(item) || currentType === 1" class="preview-box my-2" @click="handleEdit(item)">
+                  <i class="el-icon-edit"></i>
+                  <span>编辑</span>
+                </div>
+                <div
+                  v-if="hasPermission(item) || currentType === 1"
+                  class="preview-box"
+                  style="color: red"
+                  @click="handleDelete(item)"
+                >
+                  <i class="el-icon-delete"></i>
+                  <span>删除</span>
+                </div>
               </div>
+
               <div class="bottom-text" @click="handleSuccessTemplate(item)">立即使用</div>
             </div>
           </div>
@@ -107,7 +123,7 @@
               clearable
               @update:value="(val) => handleStart(val, item)"
             />
-            <n-ellipsis ml-2 style="max-width: 18rem"> {{ item.templateName }}</n-ellipsis>
+            <n-ellipsis ml-2 style="width: 16rem"> {{ item.templateName }}</n-ellipsis>
           </div>
           <div v-if="item.lastUseDate" flex items-center my-2>
             <div rounded h-2 w-2 bg-gray-500 mx-2></div>
@@ -131,11 +147,13 @@
     v-model:show="showUpload"
     :template-type-options="templateTypeOptions"
     :template-type-list="templateTypeList"
+    :template-detail="templateDetail"
     @success-save="load"
   ></uploadDrawer>
 </template>
 
 <script setup>
+import { useUserStore } from '@/store/modules/user'
 import fileLoadFail from '@/assets/images/seal-load-fail.png'
 import { getDateDiff } from '@/utils'
 import api from '@/api/index'
@@ -147,6 +165,7 @@ import {
   searchTemplate,
   searchMyCollection,
   getContractType,
+  deleteTpl,
 } from './api'
 import uploadDrawer from './components/uploadFileDrawer.vue'
 const router = useRouter()
@@ -173,7 +192,7 @@ const templateTypeOptions = ref([
     value: 2,
   },
 ])
-
+const userStore = useUserStore()
 const loading = ref(false)
 const showUpload = ref(false)
 const chooseTypeId = ref(null)
@@ -184,11 +203,13 @@ const templateTypeList = ref([])
 const templateOption = ref([])
 const tableData = ref([])
 const totalCount = ref(0)
+let templateDetail = ref({})
 const pageCount = computed(() => {
   return Math.ceil(totalCount.value / search.pageSize) || 1
 })
 
 function uploadTemplate() {
+  templateDetail.value = {}
   showUpload.value = true
 }
 
@@ -260,6 +281,44 @@ function handleDetail(row) {
       fileId: row.fileId,
       officeFilePath: row.officeFilePath,
       edit: 1,
+    },
+  })
+}
+
+// 编辑模板
+function handleEdit(row) {
+  const fileArr = row.officeFilePath && row.officeFilePath.split('/')
+  const fileType = fileArr[fileArr.length - 1].split('.').pop()
+  const fileName = `${row.templateName}.${fileType}`
+  templateDetail.value = {
+    templateCate: row.category,
+    contractTag: row.tag,
+    year: row.year.toString(),
+    file: row.fileId,
+    templateId: row.templateId,
+    fileName,
+  }
+  showUpload.value = true
+}
+// 删除合同模板
+function handleDelete(row) {
+  $dialog.confirm({
+    content: '确定删除此合同模板吗？',
+    async confirm() {
+      try {
+        const { code, msg } = await deleteTpl({ templateId: row.templateId })
+        if (code === 0) {
+          $message.success('删除成功')
+        } else {
+          $message.error(msg)
+        }
+        load()
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    cancel() {
+      $message.warning('已取消')
     },
   })
 }
@@ -508,6 +567,14 @@ function tagStyle(item) {
 function tagName(item) {
   let name = ['精选', '官方', '内部']
   return name[item.tag]
+}
+
+function hasPermission(i) {
+  const { userId, userName } = userStore
+  if (userName === 'admin' || userId === i.creator) {
+    return true
+  }
+  return false
 }
 
 onMounted(async () => {

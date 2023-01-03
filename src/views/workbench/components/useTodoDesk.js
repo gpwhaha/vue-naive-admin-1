@@ -22,16 +22,16 @@ export const useTodoDesk = () => {
   const myPerformData = ref([])
   const search = ref({
     pageNo: 1,
-    pageSize: 10,
+    pageSize: 5,
   })
 
   //计算属性
   const pageCount = computed(() => {
     let count = {
-      1: toCheckCount,
-      2: toHonrkCount,
+      1: Math.ceil(toCheckCount.value / search.value.pageSize) || 1,
+      2: Math.ceil(toHonrkCount.value / search.value.pageSize) || 1,
     }
-    return count[activeName]
+    return count[activeName.value]
   })
 
   //方法
@@ -83,9 +83,10 @@ export const useTodoDesk = () => {
     }
   }
 
-  function handelPageChange(page) {
+  async function handelPageChange(page) {
     search.value.pageNo = page
-    getTableData()
+    const data = await getTableData(activeName.value)
+    tableData.value = data.item
   }
 
   async function getTableData(type) {

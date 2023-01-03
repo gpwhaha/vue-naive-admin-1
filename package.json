@@ -21,6 +21,7 @@
     "dayjs": "^1.11.0",
     "echarts": "^5.4.1",
     "encryptlong": "^3.1.4",
+    "js-file-download": "^0.4.12",
     "js-md5": "^0.7.3",
     "jsencrypt": "^3.2.1",
     "lodash-es": "^4.17.21",

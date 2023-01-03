@@ -3,7 +3,8 @@
     <div text-6>{{ query.fileTitle }}</div>
     <div absolute h-full right-0 top-0 box-border>
       <div h-full flex justify-center items-center>
-        <n-button type="info"> 下载合同 </n-button> <n-button mx-8 @click="router.go(-1)"> 返回 </n-button>
+        <n-button type="info" @click="downloadContractFiles"> 下载合同 </n-button>
+        <n-button mx-8 @click="router.go(-1)"> 返回 </n-button>
       </div>
     </div>
   </div>
@@ -19,10 +20,36 @@
 </template>
 
 <script setup>
+import fileDownload from 'js-file-download'
+import { downloadFile, downloadContractFile } from './api'
 const router = useRouter()
 const { query } = useRoute()
 const readonly = ref(true)
 const openEdit = ref(false)
+const templateContract = ref(false)
+const officeFileIdQ = ref(null)
+const contractIdQ = ref(null)
+const fileTitleQ = ref(null)
+
+async function downloadContractFiles() {
+  let res
+  if (templateContract.value) {
+    res = await downloadFile(officeFileIdQ.value)
+  } else {
+    res = await downloadContractFile(contractIdQ.value)
+  }
+  fileDownload(res, `${fileTitleQ.value}.docx`)
+}
+
+onMounted(() => {
+  const { fileTitle, contractId, fileId, officeFilePath } = query
+  fileTitleQ.value = fileTitle
+  contractIdQ.value = contractId
+  officeFileIdQ.value = fileId
+  if (fileId && officeFilePath) {
+    templateContract.value = true
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>

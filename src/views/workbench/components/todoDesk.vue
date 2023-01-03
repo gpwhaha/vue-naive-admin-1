@@ -17,9 +17,10 @@
                 </n-tabs>
 
                 <div ml-2 flex>
-                  <div w-20>共 {{ totalCount }} 条</div>
+                  <div ml-2 w-26>共 {{ totalCount }}条</div>
                   <n-pagination
                     v-model:page="search.pageNo"
+                    v-model:page-size="search.pageSize"
                     :page-count="pageCount"
                     :page-sizes="[5]"
                     :on-update:page="handelPageChange"

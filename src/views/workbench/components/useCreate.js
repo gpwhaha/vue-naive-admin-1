@@ -111,7 +111,7 @@ export const useCreate = () => {
 
   function toMore() {
     router.push({
-      name: 'template-contracts',
+      name: 'template',
     })
   }
 

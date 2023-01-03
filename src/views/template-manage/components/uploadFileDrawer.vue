@@ -36,7 +36,7 @@
             />
           </n-form-item>
           <n-form-item label-placement="top" label="上传模板：（合同名称默认为上传模板名称）" path="fileList">
-            <uploadFile v-model:file-lists="model.fileList"></uploadFile>
+            <uploadFile v-model:file-lists="model.fileList" :limit="limit"></uploadFile>
           </n-form-item>
         </n-form>
         <div w-full flex justify-center>
@@ -49,6 +49,7 @@
 
 <script setup>
 import { createTpl, editTpl } from '../api'
+import { isEmpty } from '@/utils'
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -61,6 +62,10 @@ const props = defineProps({
   templateTypeList: {
     type: Array,
     default: () => [],
+  },
+  templateDetail: {
+    type: Object,
+    default: () => {},
   },
 })
 const emit = defineEmits(['update:visible', 'successSave', 'update:show'])
@@ -81,10 +86,15 @@ const options = computed(() => {
   return arr
 })
 
+const limit = computed(() => {
+  return isEdit.value ? 1 : 5
+})
+
 const loading = ref(false)
 const fileList = ref([])
 const formRef = ref(null)
-const model = ref({ categoryId: null, tag: null, year: null, fileList: [] })
+const isEdit = ref(false)
+const model = ref({ templateId: null, categoryId: null, tag: null, year: null, fileList: [] })
 const size = 'medium'
 const rules = {
   categoryId: {
@@ -118,12 +128,29 @@ const rules = {
   },
 }
 
-function open() {
-  model.value.categoryId = null
-  model.value.tag = null
-  model.value.year = null
-  model.value.fileList = []
-}
+watch(
+  () => props.templateDetail,
+  (v) => {
+    if (!isEmpty(v)) {
+      isEdit.value = true
+      model.value.templateId = v.templateId
+      model.value.categoryId = v.templateCate
+      model.value.tag = v.contractTag
+      model.value.year = v.year
+      model.value.fileList = [{ id: v.file, name: v.fileName, status: 'finished', file: v.file }]
+    } else {
+      isEdit.value = false
+      model.value.categoryId = null
+      model.value.tag = null
+      model.value.year = null
+      model.value.fileList = []
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+function open() {}
+
 function handleValidateButtonClick(e) {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
@@ -131,18 +158,30 @@ function handleValidateButtonClick(e) {
       try {
         loading.value = true
         let param = {
+          templateId: model.value.templateId,
           categoryId: model.value.categoryId,
           tag: model.value.tag,
           year: model.value.year,
           files: model.value.fileList.map((i) => i.file),
         }
-        const { code, msg } = await createTpl(param)
-        if (code === 0) {
-          $message.success('模板上传成功')
-          emit('successSave')
-          emit('update:show', false)
+        if (isEdit.value) {
+          const { code, msg } = await editTpl(param)
+          if (code === 0) {
+            $message.success('模板更新成功')
+            emit('successSave')
+            emit('update:show', false)
+          } else {
+            $message.error(msg)
+          }
         } else {
-          $message.error(msg)
+          const { code, msg } = await createTpl(param)
+          if (code === 0) {
+            $message.success('模板上传成功')
+            emit('successSave')
+            emit('update:show', false)
+          } else {
+            $message.error(msg)
+          }
         }
       } finally {
         loading.value = false

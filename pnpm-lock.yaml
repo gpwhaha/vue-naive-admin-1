@@ -27,6 +27,7 @@ specifiers:
   esno: ^0.13.0
   fs-extra: ^10.0.1
   husky: ^8.0.1
+  js-file-download: ^0.4.12
   js-md5: ^0.7.3
   jsencrypt: ^3.2.1
   lint-staged: ^13.0.3
@@ -59,6 +60,7 @@ dependencies:
   dayjs: 1.11.0
   echarts: 5.4.1
   encryptlong: 3.1.4
+  js-file-download: 0.4.12
   js-md5: 0.7.3
   jsencrypt: 3.2.1
   lodash-es: 4.17.21
@@ -4069,6 +4071,10 @@ packages:
   /js-base64/2.6.4:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}
     dev: true
+
+  /js-file-download/0.4.12:
+    resolution: {integrity: sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg==}
+    dev: false
 
   /js-md5/0.7.3:
     resolution: {integrity: sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==}
