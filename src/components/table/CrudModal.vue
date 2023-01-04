@@ -1,5 +1,13 @@
 <template>
-  <n-modal v-model:show="show" :style="{ width }" preset="card" :title="title" size="huge" :bordered="false">
+  <n-modal
+    v-model:show="show"
+    :style="{ width }"
+    preset="card"
+    :title="title"
+    size="huge"
+    :bordered="false"
+    @after-enter="open"
+  >
     <slot />
     <template v-if="showFooter" #footer>
       <footer flex justify-end>
@@ -36,7 +44,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:visible', 'onSave'])
+const emit = defineEmits(['update:visible', 'onSave', 'open'])
 const show = computed({
   get() {
     return props.visible
@@ -45,4 +53,7 @@ const show = computed({
     emit('update:visible', v)
   },
 })
+function open() {
+  emit('open')
+}
 </script>

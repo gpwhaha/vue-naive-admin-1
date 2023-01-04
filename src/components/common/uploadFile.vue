@@ -27,7 +27,7 @@
 <script setup>
 import fileImg from '@/assets/images/upload_flow.png'
 import { UPLOAD_FILE_CONTRACT } from '@/enums/fileWay'
-import { getToken } from '@/utils'
+import { getToken, fileSizeTransform } from '@/utils'
 import api from '@/api/index'
 
 const props = defineProps({
@@ -46,6 +46,10 @@ const props = defineProps({
   limit: {
     type: Number,
     default: 5,
+  },
+  size: {
+    type: Number,
+    default: 20 * 1024 * 1024,
   },
   multiple: {
     type: Boolean,
@@ -72,12 +76,21 @@ const fileAcceptText = computed(() => {
   return props.acceptFile.toString().replace(/,/g, '、')
 })
 
+const fileSize = computed(() => {
+  return fileSizeTransform(props.size)
+})
+
 const emit = defineEmits(['successUpload', 'update:fileLists'])
 
 async function beforeUpload(data) {
+  let size = data.file.file?.size
+  if (size > props.size) {
+    $message.warning(`文件超过${fileSize.value}，请重新上传`)
+    return false
+  }
   let suffix = data.file.file?.name.split('.').pop()
   if (!props.acceptFile.includes(suffix)) {
-    $message.error(`只能上传${fileAcceptText}格式的文件，请重新上传`)
+    $message.warning(`只能上传${fileAcceptText}格式的文件，请重新上传`)
     return false
   }
   return true

@@ -75,7 +75,12 @@ export function debounce(method, wait, immediate) {
   }
 }
 
-/**时间戳转多少分钟之前*/
+/**
+ * @desc  时间戳转换为多少分钟之前
+ * @param {Function} func
+ * @param {timestamp} dateTimeStamp
+ * @return {*}
+ */
 export const getDateDiff = (dateTimeStamp) => {
   // 时间字符串转时间戳
   let timestamp = new Date(dateTimeStamp).getTime()
@@ -110,4 +115,20 @@ export const getDateDiff = (dateTimeStamp) => {
     result = `${parseInt(minC)}分钟前`
   } else result = '刚刚'
   return result
+}
+
+/**
+ * @desc  文件大小转换
+ * @param {Function} func
+ * @param {number} size
+ * @return {*}
+ */
+export const fileSizeTransform = (size) => {
+  if (!size) return ''
+  let num = 1024.0 //byte
+  if (size < num) return `${size}B`
+  if (size < Math.pow(num, 2)) return `${(size / num).toFixed(2)}KB` //kb
+  if (size < Math.pow(num, 3)) return `${(size / Math.pow(num, 2)).toFixed(2)}MB` //M
+  if (size < Math.pow(num, 4)) return `${(size / Math.pow(num, 3)).toFixed(2)}GB` //G
+  return `${(size / Math.pow(num, 4)).toFixed(2)}TB` //T
 }

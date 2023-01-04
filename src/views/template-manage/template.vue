@@ -585,13 +585,17 @@ onMounted(async () => {
     let allChildType = []
     for (const i of options) {
       if (Array.isArray(i.child) && i.child.length > 0) {
-        let child = i.child.map((j) => {
-          return {
-            label: j.typeName,
-            value: j.typeId,
-            sort: j.sort,
-          }
-        })
+        let child = i.child
+          .map((j) => {
+            return {
+              label: j.typeName,
+              value: j.typeId,
+              sort: j.sort,
+            }
+          })
+          .sort((a, b) => {
+            return a.sort - b.sort
+          })
         allChildType.push(...child)
       }
     }
