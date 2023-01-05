@@ -34,4 +34,5 @@ export default {
     request.post(`/contract/draft/queryDraftDetail/${contractId}`) /** 智能起草-查询合同信息 */,
   delPerformFile: (data) => request.post(`contract/perform/delPerformFile`, data) /** 删除文件（服务器） */,
   uploadStockContract: (data) => request.post(`contract/uploadStockContract`, data) /** 合同管理-导入批量合同 */,
+  searchTemplate: (data) => request.post(`contract/template/searchTemplate`, data) /** 搜索合同模板 */,
 }

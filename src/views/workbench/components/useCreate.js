@@ -117,7 +117,7 @@ export const useCreate = () => {
 
   function toCreate() {
     router.push({
-      name: 'contractCreate',
+      name: 'create-onlie',
     })
   }
 

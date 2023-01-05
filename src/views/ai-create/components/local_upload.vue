@@ -31,7 +31,7 @@ const props = defineProps({
   },
 })
 
-const typeId = ref(-1)
+const typeId = ref(null)
 const fileLists = ref([])
 
 const emit = defineEmits(['update:visible', 'onSave'])
@@ -44,14 +44,14 @@ const show = computed({
   },
 })
 const isEdit = computed(() => {
-  if (typeId.value > -1 && fileLists.value.length > 0) {
+  if (typeId.value && fileLists.value.length > 0) {
     return false
   }
   return true
 })
 
 function open() {
-  typeId.value = -1
+  typeId.value = null
   fileLists.value = []
 }
 

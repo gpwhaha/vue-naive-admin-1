@@ -1,12 +1,14 @@
 <template>
   <n-form-item label-placement="left" label="合同类型：" show-require-mark require-mark-placement="left" :rule="rule">
-    <n-tree-select
+    <n-cascader
       v-model:value="categoryId"
-      key-field="typeId"
-      label-field="typeName"
-      children-field="child"
-      :options="options"
       placeholder="请选择"
+      :expand-trigger="'hover'"
+      :options="templateTypeList"
+      :check-strategy="'child'"
+      label-field="typeName"
+      value-field="typeId"
+      children-field="child"
     />
   </n-form-item>
 </template>
@@ -15,8 +17,8 @@
 import { getContractType } from '@/views/template-manage/api'
 const props = defineProps({
   typeId: {
-    type: Number,
-    default: -1,
+    type: [Number, Object],
+    default: null,
   },
 })
 const emit = defineEmits(['update:typeId', 'successChoose'])
@@ -30,21 +32,15 @@ const categoryId = computed({
 })
 const templateTypeList = ref([])
 const rule = ref({
-  trigger: ['blur', 'change'],
+  trigger: ['change', 'blur'],
   validator() {
-    if (categoryId.value > -1) return true
+    if (categoryId.value) return true
     emit('successChoose')
     return false
   },
   message: '请选择合同类型',
 })
-const options = computed(() => {
-  let arr = templateTypeList.value
-  arr.forEach((i) => {
-    i.disabled = true
-  })
-  return arr
-})
+
 //查询合同类型 所有
 async function getContractTypeNew() {
   const { code, msg, data } = await getContractType()
@@ -64,4 +60,4 @@ async function getContractTypeNew() {
 getContractTypeNew()
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>

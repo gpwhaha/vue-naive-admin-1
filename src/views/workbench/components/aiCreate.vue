@@ -43,9 +43,7 @@ import fileLoadFail from '@/assets/images/seal-load-fail.png'
 import { useCreate } from './useCreate'
 const { loading, fileList, load, tagStyle, tagName, toMore, toCreate, handleDetail, handleSuccessTemplate } =
   useCreate()
-onMounted(() => {
-  load()
-})
+onMounted(load)
 </script>
 <style lang="scss">
 .list {

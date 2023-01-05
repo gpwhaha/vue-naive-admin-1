@@ -1,7 +1,7 @@
 <template>
   <n-drawer v-model:show="show" :width="502" @after-enter="open">
-    <n-drawer-content header-style="width:50rem;display:flex;justify:center" closable>
-      <template #header> <div w-170 flex justify-center text-6>上传模板</div></template>
+    <n-drawer-content closable>
+      <template #header> <div w-175 flex justify-center text-6>上传模板</div></template>
       <div wh-full flex flex-col justify-between>
         <n-form
           ref="formRef"

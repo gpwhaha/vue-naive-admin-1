@@ -8,6 +8,12 @@
     :bordered="false"
     @after-enter="open"
   >
+    <template v-if="showHeader" #header>
+      <div w-full flex items-center>
+        <!-- <div text-7>{{ title }}</div> -->
+        <slot name="header" />
+      </div>
+    </template>
     <slot />
     <template v-if="showFooter" #footer>
       <footer flex justify-end>
@@ -29,6 +35,10 @@ const props = defineProps({
   title: {
     type: String,
     default: '',
+  },
+  showHeader: {
+    type: Boolean,
+    default: false,
   },
   showFooter: {
     type: Boolean,

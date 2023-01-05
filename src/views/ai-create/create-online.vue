@@ -21,13 +21,41 @@
               <div class="description">支持格式为：doc、docx（上传单个文件大小不超过20M）</div>
             </div>
           </div>
-          <div class="box-item bg-white"></div>
+          <div class="box-item bg-white">
+            <div class="head">
+              <div class="name">按照标准模板新建</div>
+              <div class="select">
+                <n-select
+                  w-150
+                  :options="templateData"
+                  label-field="templateName"
+                  value-field="templateId"
+                  :render-label="renderLabel"
+                  :loading="loadingSelect"
+                  clearable
+                  @update:value="templateChoose"
+                  @scroll="handleScroll"
+                />
+                <n-button type="primary" class="select-btn responsive-button" @click="openTemplatePick">
+                  选择模板
+                </n-button>
+              </div>
+            </div>
+            <div class="bg-img" @click="openTemplatePick">
+              <n-image :src="TemplateCreateImg" preview-disabled></n-image>
+            </div>
+            <div class="foot">
+              <div class="description">直接套用企业模板，填写参数，快速审批</div>
+              <n-button type="primary" class="btn responsive-button" @click="useTemplateCreate"> 开始创建 </n-button>
+            </div>
+          </div>
           <div class="box-item bg-white"></div>
         </div>
         <div class="rencent-use my-4 bg-white"></div>
       </div>
     </n-spin>
     <localUpload v-model:visible="localUploadDialog" @on-save="loaclCreate"></localUpload>
+    <TemplatePicker v-model:visible="showTemplatePicker"></TemplatePicker>
   </div>
 </template>
 
@@ -36,10 +64,23 @@ import AICreateImg from '@/assets/images/AICreate.png'
 import TemplateCreateImg from '@/assets/images/TemplateCreate.png'
 import LocalCreateImg from '@/assets/images/LocalCreate.png'
 import localUpload from './components/local_upload.vue'
+import TemplatePicker from './components/tempalte_picker.vue'
 import api from '@/api/index'
+
 const router = useRouter()
 const localUploadDialog = ref(false)
 const loading = ref(false)
+const showTemplatePicker = ref(false)
+const templateData = ref([])
+const templateFileId = ref(null)
+const templateTypeId = ref(null)
+const templateId = ref(null)
+const paramsCount = ref(null)
+const tag = ref(null)
+const templatePage = ref(1)
+const shouldLoadMore = ref(false)
+const loadingSelect = ref(false)
+
 /**打开本地上传弹窗*/
 function openLocalUpload() {
   localUploadDialog.value = true
@@ -72,6 +113,74 @@ async function loaclCreate(form) {
   }
 }
 
+/**打开模板弹窗*/
+function openTemplatePick() {
+  showTemplatePicker.value = true
+}
+
+/**模板下拉选择*/
+function templateChoose(tId) {
+  if (tId) {
+    let find = templateData.value.find((i) => i.templateId === tId)
+    templateFileId.value = find.fileId
+    tag.value = find.tag
+    templateTypeId.value = find.category
+    templateId.value = find.templateId
+    paramsCount.value = find.paramsCount
+  } else {
+    templateFileId.value = null
+    tag.value = null
+    templateTypeId.value = null
+    templateId.value = null
+    paramsCount.value = null
+  }
+}
+
+/**模板创建*/
+async function useTemplateCreate() {
+  try {
+    loading.value = true
+    if (!templateFileId.value) {
+      return $message.error('请先选择模板')
+    } else if (templateFileId.value && paramsCount.value > 0) {
+      let param = {
+        typeId: templateTypeId.value,
+        draftType: 2,
+        templateId: templateId.value,
+      }
+      const { data } = await createContract(param)
+      router.push({
+        name: 'fillTemplateParameters',
+        query: {
+          contractId: data.contractId,
+        },
+      })
+    } else {
+      let param = {
+        typeId: templateTypeId.value,
+        draftType: 1,
+        fileId: templateFileId.value,
+      }
+      const { data } = await createContract(param)
+      const {
+        data: { contractInfo, contractDocumentView },
+      } = await queryDraftDetail(data.contractId)
+      router.push({
+        name: 'editContract',
+        query: {
+          fromType: 2,
+          contractId: contractInfo.contractId,
+          version: data.version,
+          officeFileId: contractDocumentView.fileId,
+          officeFilePath: contractDocumentView.filePath,
+        },
+      })
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
 /**智能起草*/
 async function createContract(param) {
   const { data, code, msg } = await api.createContract(param)
@@ -93,6 +202,91 @@ async function queryDraftDetail(contractId) {
     return Promise.reject({ data, code, msg })
   }
 }
+
+//查询模板数据
+async function getTemplates() {
+  let params = {
+    page: templatePage.value,
+    pageSize: 10,
+    templateName: '',
+    categoryId: '',
+    publishDate: '',
+  }
+  try {
+    loadingSelect.value = true
+    const { code, msg, data } = await api.searchTemplate(params)
+    if (code === 0) {
+      if (Array.isArray(data.item) && data.item.length > 0) {
+        shouldLoadMore.value = true
+        templateData.value.push(...data.item)
+      } else {
+        shouldLoadMore.value = false
+      }
+    } else {
+      $message.error(msg)
+    }
+    return Promise.resolve(data)
+  } finally {
+    loadingSelect.value = false
+  }
+}
+
+//滚动加载更多模板
+function handleScroll(e) {
+  const { scrollTop, offsetHeight, scrollHeight } = e.currentTarget
+  if (scrollTop + offsetHeight >= scrollHeight && shouldLoadMore.value) {
+    templatePage.value++
+    getTemplates()
+  }
+}
+
+function renderLabel(option) {
+  return [
+    h(
+      'span',
+      {
+        style: {
+          float: 'left',
+          fontSize: '1.4rem',
+        },
+      },
+      option.templateName,
+      [
+        h('sup', { style: templateStyle(option) }, templateTag(option)),
+        option.paramsCount > 0 ? h('sup', { style: templateParamStyle(option) }, '含参') : '',
+      ]
+    ),
+  ]
+}
+
+function templateStyle(item) {
+  let color = ['#ff9646', 'var(--primary-color)', '#14ddbb']
+  return {
+    backgroundColor: color[item.tag],
+    color: '#fff',
+    fontSize: '1.2rem',
+    padding: '0.2rem',
+    borderRadius: '0.5rem',
+  }
+}
+function templateParamStyle() {
+  return {
+    backgroundColor: '#1C7FF1FF',
+    color: '#fff',
+    fontSize: '1.2rem',
+    padding: '0.2rem',
+    borderRadius: '0.5rem',
+    marginLeft: '0.5rem',
+  }
+}
+function templateTag(item) {
+  let name = ['精选', '官方', '内部']
+  return name[item.tag]
+}
+
+onMounted(() => {
+  getTemplates()
+})
 </script>
 
 <style lang="scss" scoped>
