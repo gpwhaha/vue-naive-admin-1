@@ -3,7 +3,7 @@
     <n-spin :show="loading" wh-full>
       <header px-2 mb-4 min-h-14 flex justify-between items-center>
         <h2 color="#333" text-7 font-700>在线起草</h2>
-        <n-button type="primary">
+        <n-button type="primary" @click="createNewFile">
           <TheIcon icon="material-symbols:add" :size="18" class="mr-5" /> 新建空白文档
         </n-button>
       </header>
@@ -49,9 +49,52 @@
               <n-button type="primary" class="btn responsive-button" @click="useTemplateCreate"> 开始创建 </n-button>
             </div>
           </div>
-          <div class="box-item bg-white"></div>
+          <div class="box-item bg-white">
+            <div class="head">
+              <div class="name">智能起草</div>
+              <div class="steps">
+                <n-steps status="process" ml-30>
+                  <n-step>
+                    <template #default>
+                      <div text-6>回答一些简单的问题</div>
+                      <div class="-ml-8 text-5 color-gray">（不回答的问题将在合同中留空）</div>
+                    </template>
+                  </n-step>
+                  <n-step>
+                    <template #default>
+                      <div text-6>生成一份合同</div>
+                    </template>
+                  </n-step>
+                  <n-step>
+                    <template #default>
+                      <div text-6 mt-12>仅需五分钟</div>
+                    </template>
+                  </n-step>
+                </n-steps>
+              </div>
+            </div>
+            <div class="bg-img" @click="showAIContractPicker">
+              <n-image :src="AICreateImg" preview-disabled></n-image>
+            </div>
+            <div class="foot">
+              <div class="description">选择公开模板，自由编写合同</div>
+            </div>
+          </div>
         </div>
-        <div class="rencent-use my-4 bg-white"></div>
+        <div class="rencent-use my-4 bg-white p-4">
+          <div text-6>
+            最近完成合同
+            <span text-5 color-gray> （你可以选择一个已经完成的合同来创建一个合同） </span>
+          </div>
+          <CrudTable
+            ref="$table"
+            :scroll-x="500"
+            :is-pagination="isPagination"
+            :columns="columns"
+            :get-data="getRecentContractList"
+          >
+          </CrudTable>
+        </div>
       </div>
     </n-spin>
     <localUpload v-model:visible="localUploadDialog" @on-save="loaclCreate"></localUpload>
@@ -66,10 +109,14 @@ import LocalCreateImg from '@/assets/images/LocalCreate.png'
 import localUpload from './components/local_upload.vue'
 import TemplatePicker from './components/tempalte_picker.vue'
 import api from '@/api/index'
+import { getRecentContractList, createContractByClone } from './api'
+import { formatDateTime, renderIcon, isNullOrUndef } from '@/utils'
+import { NButton } from 'naive-ui'
 
 const router = useRouter()
 const localUploadDialog = ref(false)
 const loading = ref(false)
+//模板起草
 const showTemplatePicker = ref(false)
 const templateData = ref([])
 const templateFileId = ref(null)
@@ -80,6 +127,48 @@ const tag = ref(null)
 const templatePage = ref(1)
 const shouldLoadMore = ref(false)
 const loadingSelect = ref(false)
+//智能起草
+const aiContractDialog = ref(false)
+//最近使用
+const $table = ref(null)
+const tableData = ref([])
+const isPagination = ref(false)
+const columns = [
+  {
+    title: '合同编号',
+    key: 'billNo',
+    ellipsis: { tooltip: true },
+  },
+  { title: '合同名称', key: 'contractTitle', ellipsis: { tooltip: true } },
+  { title: '合同类型', key: 'contractType', ellipsis: { tooltip: true } },
+  {
+    title: '创建时间',
+    key: 'createDate',
+    render(row) {
+      return h('span', formatDateTime(row['createDate']))
+    },
+  },
+  {
+    title: '操作',
+    key: 'actions',
+    align: 'center',
+    fixed: 'right',
+    render(row) {
+      return [
+        h(
+          NButton,
+          {
+            size: 'small',
+            type: 'primary',
+            secondary: true,
+            onClick: () => handleUseRecentFile(row),
+          },
+          { default: () => '创建', icon: renderIcon('mdi:file-document', { size: 14 }) }
+        ),
+      ]
+    },
+  },
+]
 
 /**打开本地上传弹窗*/
 function openLocalUpload() {
@@ -181,6 +270,37 @@ async function useTemplateCreate() {
   }
 }
 
+/**新建空白文档 */
+async function createNewFile() {
+  try {
+    loading.value = true
+    let param = {
+      draftType: 4,
+    }
+    const { data } = await createContract(param)
+    const {
+      data: { contractInfo, contractDocumentView },
+    } = await queryDraftDetail(data.contractId)
+    router.push({
+      name: 'editContract',
+      query: {
+        fromType: 2,
+        contractId: contractInfo.contractId,
+        version: data.version,
+        officeFileId: contractDocumentView.fileId,
+        officeFilePath: contractDocumentView.filePath,
+      },
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+/** 智能起草弹窗*/
+function showAIContractPicker() {
+  aiContractDialog.value = true
+}
+
 /**智能起草*/
 async function createContract(param) {
   const { data, code, msg } = await api.createContract(param)
@@ -200,6 +320,29 @@ async function queryDraftDetail(contractId) {
   } else {
     $message.error(msg)
     return Promise.reject({ data, code, msg })
+  }
+}
+
+//使用最近的合同创建
+async function handleUseRecentFile(row) {
+  try {
+    loading.value = true
+    const { code, data, msg } = await createContractByClone(row.contractId, row.version)
+    if (code === 0) {
+      router.push({
+        name: 'editContract',
+        query: {
+          contractId: data.contractId,
+          version: data.version,
+          officeFileId: data.officeFileId,
+          officeFilePath: data.officeFilePath,
+        },
+      })
+    } else {
+      $message.error(msg)
+    }
+  } finally {
+    loading.value = false
   }
 }
 
@@ -286,6 +429,7 @@ function templateTag(item) {
 
 onMounted(() => {
   getTemplates()
+  $table.value?.handleSearch()
 })
 </script>
 
@@ -293,6 +437,12 @@ onMounted(() => {
 :deep(.n-spin-content) {
   height: 95%;
   width: 100%;
+}
+:deep(.n-steps .n-step-content .n-step-content__description) {
+  position: relative;
+  left: -42%;
+  margin-top: 2rem;
+  width: 140%;
 }
 .create {
   flex: 2;
@@ -333,8 +483,12 @@ onMounted(() => {
 
     .bg-img {
       text-align: center;
-      height: 14rem;
+      height: 12rem;
       cursor: pointer;
+      :deep(.n-image img) {
+        width: 80%;
+        transform: translateX(12%);
+      }
     }
 
     .foot {

@@ -11,7 +11,7 @@
       :extra-params="extraParams"
       :scroll-x="1200"
       :columns="columns"
-      :get-data="api.getSingleReviewList"
+      :get-data="getSingleReviewList"
     >
     </CrudTable
   ></CommonPage>
@@ -19,7 +19,7 @@
 
 <script setup>
 import { useCRUD } from '@/composables'
-import api from './api'
+import { getSingleReviewList } from './api'
 import { NButton } from 'naive-ui'
 import { formatDate, formatDateTime, renderIcon } from '@/utils'
 
@@ -116,9 +116,6 @@ const {
 } = useCRUD({
   name: '文章',
   initForm: { author: '大脸怪' },
-  doCreate: api.addPost,
-  doDelete: api.deletePost,
-  doUpdate: api.updatePost,
   refresh: () => $table.value?.handleSearch(),
 })
 </script>

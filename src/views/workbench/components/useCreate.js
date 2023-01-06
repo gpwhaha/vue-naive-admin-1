@@ -128,7 +128,7 @@ export const useCreate = () => {
       2: ['#4dc34d', '#0d990d', '内部'],
     }
     return {
-      backgroundImage: `linear-gradient( {color[item.tag][0]},  {color[item.tag][1]})`,
+      backgroundImage: `linear-gradient( ${color[item.tag][0]},  ${color[item.tag][1]})`,
     }
   }
 
