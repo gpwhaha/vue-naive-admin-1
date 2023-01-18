@@ -37,5 +37,17 @@ export default {
         keepAlive: true,
       },
     },
+    {
+      name: 'editContract',
+      path: 'edit-Contract',
+      component: () => import('./edit-Contract.vue'),
+      isHidden: true,
+      meta: {
+        title: '编辑合同',
+        icon: 'ion:ios-checkbox',
+        order: 1,
+        keepAlive: false,
+      },
+    },
   ],
 }

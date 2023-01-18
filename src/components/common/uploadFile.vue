@@ -90,7 +90,7 @@ async function beforeUpload(data) {
   }
   let suffix = data.file.file?.name.split('.').pop()
   if (!props.acceptFile.includes(suffix)) {
-    $message.warning(`只能上传${fileAcceptText}格式的文件，请重新上传`)
+    $message.warning(`只能上传${fileAcceptText.value}格式的文件，请重新上传`)
     return false
   }
   return true
