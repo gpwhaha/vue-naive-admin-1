@@ -20,13 +20,13 @@
       </div>
 
       <div flex wh-full p-4 justify-between>
-        <div class="left wh-full">
-          <yo-zo-office
+        <div class="wh-full">
+          <!-- <yo-zo-office
             v-if="showOffice"
             :office-file-name="'111'"
             :office-file-id="officeFileId"
             :office-file-path="officeFilePath"
-          ></yo-zo-office>
+          ></yo-zo-office> -->
         </div>
         <div class="right flex">
           <div class="menu-bar flex flex-col items-center pt-4 bg-white ml-4 w-28 h-full">
@@ -43,7 +43,12 @@
           </div>
 
           <div :style="style" class="bar-content wh-full bg-white ml-4">
-            <component :is="componentName" v-if="collapsed"></component>
+            <component
+              :is="componentName"
+              v-if="collapsed"
+              :form="form"
+              @success-save="queryContractBaseInfo"
+            ></component>
           </div>
         </div>
       </div>
@@ -59,12 +64,13 @@ import negotiate from '@/assets/images/negotiate.png'
 import examine from '@/assets/images/examine.png'
 import history from '@/assets/images/history.png'
 import AnnexeImg from '@/assets/images/Annexe.png'
-import FormInfo from './components/form_info.vue'
+import BaseInfo from './components/base_info.vue'
+import ConsultWith from './components/consult_with.vue'
 
 const enumMenus = {
   1: [
-    { name: '基本信息', img: baseImg, componentName: FormInfo },
-    { name: '协商', img: negotiate, componentName: 'ConsultWith' },
+    { name: '基本信息', img: baseImg, componentName: markRaw(BaseInfo) },
+    { name: '协商', img: negotiate, componentName: markRaw(ConsultWith) },
     { name: '审查', img: examine, componentName: 'Negotiate' },
     { name: '附件', img: AnnexeImg, componentName: 'Annexes' },
     { name: '历史', img: history, componentName: 'History' },
@@ -87,8 +93,6 @@ const componentName = ref(enumMenus[1][0].componentName)
 const icon = computed(() => (collapsed.value ? 'ep:expand' : 'ep:fold'))
 const style = computed(() => (collapsed.value ? 'width: 40rem' : 'width: 0'))
 const menus = computed(() => enumMenus[fromType.value])
-
-console.log(componentName.value)
 // fromType.value = query.fromType
 contractId.value = query.contractId
 officeFileId.value = query.officeFileId
@@ -96,18 +100,20 @@ officeFilePath.value = query.officeFilePath
 
 onMounted(async () => {
   loading.value = true
+  showOffice.value = false
   await queryContractBaseInfo()
   loading.value = false
+  showOffice.value = true
 })
 
 //查询合同基本信息
 async function queryContractBaseInfo() {
   try {
-    showOffice.value = false
+    // showOffice.value = false
     const { code, msg, data } = await queryContractBase(contractId.value)
     if (code === 0) {
       if (data) {
-        form.value.title = data.title
+        form.value.contractId = data.contractId
         form.value.amount = data.amount
         form.value.billNo = data.billNo
         form.value.title = data.title
@@ -119,9 +125,10 @@ async function queryContractBaseInfo() {
         form.value.relatives = data.relatives
         form.value.creator = data.creator
         form.value.creatorName = data.creatorName
+        form.value.version = data.version
         form.value.createDate = formatDateTime(data.createDate)
         if ((Array.isArray(data.relatives) && data.relatives.length === 0) || !data.relatives) {
-          form.value.relatives = [{ relativeOrgId: '', relativeType: '' }]
+          form.value.relatives = [{ relativeOrgId: null, relativeType: null }]
         }
         attachments.value = data.attachments
         officeFilePath.value = data.yozoPath
@@ -132,7 +139,7 @@ async function queryContractBaseInfo() {
       $message.error(msg)
     }
   } finally {
-    showOffice.value = true
+    // showOffice.value = true
   }
 }
 

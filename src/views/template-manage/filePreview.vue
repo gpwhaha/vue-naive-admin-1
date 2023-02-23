@@ -16,6 +16,7 @@
       :office-file-id="query.fileId"
       :office-file-path="query.officeFilePath"
     ></yo-zo-office>
+    <!-- <only-office></only-office> -->
   </div>
 </template>
 

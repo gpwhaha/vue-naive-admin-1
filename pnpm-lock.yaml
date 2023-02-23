@@ -6,6 +6,7 @@ specifiers:
   '@iconify-json/ep': ^1.1.8
   '@iconify/json': ^2.1.99
   '@iconify/vue': ^3.2.1
+  '@onlyoffice/document-editor-vue': ^1.2.0
   '@vitejs/plugin-vue': ^1.10.2
   '@vue/compiler-sfc': ^3.2.31
   '@vueuse/core': ^8.9.4
@@ -49,10 +50,11 @@ specifiers:
   vite-plugin-html: ^3.2.0
   vite-plugin-mock: ^2.9.6
   vite-plugin-svg-icons: ^2.0.1
-  vue: ^3.2.41
+  vue: ^3.2.31
   vue-router: ^4.1.5
 
 dependencies:
+  '@onlyoffice/document-editor-vue': 1.2.0_vue@3.2.41
   '@vueuse/core': 8.9.4_vue@3.2.41
   '@wangeditor/editor': 5.1.20
   '@wangeditor/editor-for-vue': 5.1.12_ve3n4hhcjgzqkrivacz732n3cm
@@ -614,6 +616,14 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
     dev: true
+
+  /@onlyoffice/document-editor-vue/1.2.0_vue@3.2.41:
+    resolution: {integrity: sha512-sFRElG3gyLeKr6GR2iokLxWnYKRLy2bEeFWZMiHlX0z0M+GpWd14pkCTncJQt+u8HufkKQUtjkdzjuROfKcxxQ==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.41
+    dev: false
 
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}

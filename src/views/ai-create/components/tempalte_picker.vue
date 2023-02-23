@@ -14,6 +14,7 @@
       <div class="left wh-full">
         <div class="menu_btn" :class="{ choose_menu: currentType === 1 }" @click="handleChoose(1)">我的模板</div>
         <div class="menu_btn" :class="{ choose_menu: currentType === 2 }" @click="handleChoose(2)">我的收藏</div>
+        <div class="menu_btn" :class="{ choose_menu: currentType === 3 }" @click="handleChoose(3)">最近使用</div>
         <n-divider class="divider" />
         <n-tree
           block-line
@@ -31,7 +32,7 @@
       <div class="right wh-full">
         <n-spin :show="loading">
           <div v-if="Array.isArray(tableData) && tableData.length > 0" class="list">
-            <div v-for="(item, index) in tableData.slice(0, 9)" :key="index" class="item-box">
+            <div v-for="(item, index) in tableData.slice(0, 10)" :key="index" class="item-box">
               <div class="item">
                 <div class="ribbon" :style="tagStyle(item)">
                   <span>{{ tagName(item) }}</span>
@@ -67,7 +68,7 @@
               </div>
             </div>
           </div>
-          <emptyData v-else></emptyData>
+          <emptyData v-else h-240></emptyData>
           <div flex justify-center>
             <n-pagination
               v-model:page="search.pageNo"
@@ -95,6 +96,7 @@ import {
   searchTemplate,
   addCollection,
   removeCollection,
+  queryRecentUsedContractSorted,
 } from '@/views/template-manage/api'
 import api from '@/api/index'
 import { getDateDiff } from '@/utils'
@@ -156,6 +158,8 @@ function handleChoose(type) {
     loadMyTemplates()
   } else if (currentType.value === 2) {
     loadMyCollections()
+  } else if (currentType.value === 3) {
+    recentUse()
   }
 }
 
@@ -191,6 +195,7 @@ async function handleSuccessTemplate(file) {
   const {
     data: { contractInfo, contractDocumentView },
   } = await queryDraftDetail(data.contractId)
+  await modifyContractUsedTime(file.templateId)
   router.push({
     name: 'editContract',
     query: {
@@ -216,6 +221,18 @@ async function createContract(param) {
 /**获取合同基本信息*/
 async function queryDraftDetail(contractId) {
   const { data, code, msg } = await api.queryDraftDetail(contractId)
+
+  if (code === 0) {
+    return Promise.resolve({ data, code, msg })
+  } else {
+    $message.error(msg)
+    return Promise.reject({ data, code, msg })
+  }
+}
+
+/**更新模板创建时间*/
+async function modifyContractUsedTime(templateId) {
+  const { data, code, msg } = await api.modifyContractUsedCondition(templateId)
   if (code === 0) {
     return Promise.resolve({ data, code, msg })
   } else {
@@ -236,6 +253,8 @@ async function handleStart(val, item) {
     loadMyTemplates()
   } else if (currentType === 2) {
     loadMyCollections()
+  } else if (currentType.value === 3) {
+    recentUse()
   } else {
     load()
   }
@@ -302,6 +321,8 @@ function handlePageNoChange(pageNo) {
     loadMyTemplates()
   } else if (currentType.value === 2) {
     loadMyCollections()
+  } else if (currentType.value === 3) {
+    recentUse()
   } else {
     load()
   }
@@ -388,6 +409,35 @@ async function loadMyCollections() {
       }
       tableData.value = data.item
       totalCount.value = data.total
+    } else {
+      $message.error(msg)
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+async function recentUse() {
+  try {
+    loading.value = true
+    let params = {
+      begin: (search.pageNo - 1) * search.pageSize,
+      pageSize: search.pageSize,
+      templateName: search.templateName,
+      categoryId: search.categoryId || chooseTypeId.value,
+      tag: search.tag,
+      publishDate: search.publishDate,
+    }
+    const { code, msg, data, count } = await queryRecentUsedContractSorted(params)
+    if (code === 0) {
+      for (const i of data) {
+        i.url = await getFileImg(i.templateId)
+        if (i.collection) {
+          i.rate = 1
+        }
+      }
+      tableData.value = data
+      totalCount.value = count
     } else {
       $message.error(msg)
     }

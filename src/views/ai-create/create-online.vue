@@ -9,11 +9,11 @@
       </header>
       <div wh-full flex flex-col>
         <div class="create">
-          <div class="box-item bg-white">
+          <div class="box-item bg-white" @click="openLocalUpload">
             <div class="head">
               <div class="name">本地上传合同</div>
             </div>
-            <div class="bg-img" @click="openLocalUpload">
+            <div class="bg-img">
               <n-image :src="LocalCreateImg" preview-disabled></n-image>
             </div>
 
@@ -21,10 +21,10 @@
               <div class="description">支持格式为：doc、docx（上传单个文件大小不超过20M）</div>
             </div>
           </div>
-          <div class="box-item bg-white">
+          <div class="box-item bg-white" @click="openTemplatePick">
             <div class="head">
               <div class="name">按照标准模板新建</div>
-              <div class="select">
+              <!-- <div class="select">
                 <n-select
                   w-150
                   :options="templateData"
@@ -39,17 +39,17 @@
                 <n-button type="primary" class="select-btn responsive-button" @click="openTemplatePick">
                   选择模板
                 </n-button>
-              </div>
+              </div> -->
             </div>
-            <div class="bg-img" @click="openTemplatePick">
+            <div class="bg-img">
               <n-image :src="TemplateCreateImg" preview-disabled></n-image>
             </div>
             <div class="foot">
               <div class="description">直接套用企业模板，填写参数，快速审批</div>
-              <n-button type="primary" class="btn responsive-button" @click="useTemplateCreate"> 开始创建 </n-button>
+              <!-- <n-button type="primary" class="btn responsive-button" @click="useTemplateCreate"> 开始创建 </n-button> -->
             </div>
           </div>
-          <div class="box-item bg-white">
+          <div class="box-item bg-white" @click="showAIContractPicker">
             <div class="head">
               <div class="name">智能起草</div>
               <div class="steps">
@@ -73,7 +73,7 @@
                 </n-steps>
               </div>
             </div>
-            <div class="bg-img" @click="showAIContractPicker">
+            <div class="bg-img">
               <n-image :src="AICreateImg" preview-disabled></n-image>
             </div>
             <div class="foot">
@@ -99,6 +99,7 @@
     </n-spin>
     <localUpload v-model:visible="localUploadDialog" @on-save="loaclCreate"></localUpload>
     <TemplatePicker v-model:visible="showTemplatePicker"></TemplatePicker>
+    <AiCreatePicker v-model:visible="aiContractDialog"></AiCreatePicker>
   </div>
 </template>
 
@@ -108,6 +109,7 @@ import TemplateCreateImg from '@/assets/images/TemplateCreate.png'
 import LocalCreateImg from '@/assets/images/LocalCreate.png'
 import localUpload from './components/local_upload.vue'
 import TemplatePicker from './components/tempalte_picker.vue'
+import AiCreatePicker from './components/aiCreate_picker.vue'
 import api from '@/api/index'
 import { getRecentContractList, createContractByClone } from './api'
 import { formatDateTime, renderIcon, isNullOrUndef } from '@/utils'
@@ -458,6 +460,14 @@ onMounted(() => {
     grid-template-rows: 18rem 15rem 1fr;
     box-sizing: border-box;
     padding: 2rem;
+    transition: 0.1s all;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-0.4rem);
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    }
 
     .head {
       width: 100%;

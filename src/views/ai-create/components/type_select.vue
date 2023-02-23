@@ -1,16 +1,25 @@
 <template>
-  <n-form-item label-placement="left" label="合同类型：" show-require-mark require-mark-placement="left" :rule="rule">
-    <n-cascader
-      v-model:value="categoryId"
-      placeholder="请选择"
-      :expand-trigger="'hover'"
-      :options="templateTypeList"
-      :check-strategy="'child'"
-      label-field="typeName"
-      value-field="typeId"
-      children-field="child"
-    />
-  </n-form-item>
+  <n-form ref="formRef" :model="model" :rules="rules">
+    <n-form-item
+      label-placement="left"
+      label="合同类型："
+      path="categoryId"
+      show-require-mark
+      require-mark-placement="left"
+    >
+      <n-cascader
+        v-model:value="model.categoryId"
+        placeholder="请选择"
+        :expand-trigger="'hover'"
+        :options="templateTypeList"
+        :check-strategy="'child'"
+        label-field="typeName"
+        value-field="typeId"
+        children-field="child"
+        @update:value="update"
+      />
+    </n-form-item>
+  </n-form>
 </template>
 
 <script setup>
@@ -21,25 +30,41 @@ const props = defineProps({
     default: null,
   },
 })
+
 const emit = defineEmits(['update:typeId', 'successChoose'])
-const categoryId = computed({
+const templateTypeList = ref([])
+const formRef = ref(null)
+// const model = ref({
+//   categoryId: props.typeId,
+// })
+const model = computed({
   get() {
-    return props.typeId
+    return {
+      categoryId: props.typeId,
+    }
   },
   set(v) {
     emit('update:typeId', v)
   },
 })
-const templateTypeList = ref([])
-const rule = ref({
-  trigger: ['change', 'blur'],
-  validator() {
-    if (categoryId.value) return true
-    emit('successChoose')
-    return false
-  },
-  message: '请选择合同类型',
-})
+const rules = {
+  categoryId: [
+    {
+      required: true,
+      validator(rule, value) {
+        if (!value) {
+          return new Error('请选择合同类型')
+        }
+        return true
+      },
+      trigger: ['change', 'blur'],
+    },
+  ],
+}
+
+function update(v) {
+  emit('update:typeId', v)
+}
 
 //查询合同类型 所有
 async function getContractTypeNew() {

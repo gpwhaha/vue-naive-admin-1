@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+// import * as echarts from 'echarts'
 import { contractTodaySign, contractWeekSign, contractMonthSign, contractYearSign, contractDateRangeSign } from '../api'
 const activeTab = ref('fourth')
 const timeRange = ref(null)
@@ -42,6 +42,9 @@ const func = reactive({
   third: contractMonthSign,
   fourth: contractYearSign,
 })
+
+const { proxy } = getCurrentInstance()
+console.log(proxy.$echarts)
 
 function handleChangeTab() {
   load()
@@ -215,7 +218,7 @@ async function load() {
 }
 
 async function init() {
-  useMap.value = markRaw(echarts.init(mapRef.value))
+  useMap.value = markRaw(proxy.$echarts.init(mapRef.value))
   let option = {
     color: ['#7085d4'],
     title: {
@@ -287,7 +290,7 @@ onMounted(() => {
   load()
 })
 onBeforeUnmount(() => {
-  echarts.dispose(useMap.value)
+  proxy.$echarts.dispose(useMap.value)
   window.onresize = null
 })
 </script>

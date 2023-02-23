@@ -35,3 +35,6 @@ export const downloadFile = (fileId) => {
 } //下载同模板
 
 export const deleteTpl = (data) => request.post(`contract/template/deleteTemplate`, data) //创建合同模板
+
+export const queryRecentUsedContractSorted = (data) =>
+  request.get(`contract/queryRecentUsedContractSorted?pageSize=${data.pageSize}&begin=${data.begin}`) //查询最近使用合同
