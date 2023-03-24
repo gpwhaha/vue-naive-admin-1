@@ -11,6 +11,9 @@
     :data="tableData"
     :row-key="(row) => row[rowKey]"
     :pagination="isPagination ? pagination : false"
+    :style="style"
+    :max-height="maxHeight"
+    flex-heigh
     @update:checked-row-keys="onChecked"
     @update:page="onPageChange"
   />
@@ -36,9 +39,19 @@ const props = defineProps({
     type: Number,
     default: 1200,
   },
+  maxHeight: {
+    type: Number,
+    default: 500,
+  },
   rowKey: {
     type: String,
     default: 'id',
+  },
+  style: {
+    type: Object,
+    default() {
+      return {}
+    },
   },
   columns: {
     type: Array,

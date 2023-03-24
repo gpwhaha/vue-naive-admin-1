@@ -44,7 +44,6 @@ const func = reactive({
 })
 
 const { proxy } = getCurrentInstance()
-console.log(proxy.$echarts)
 
 function handleChangeTab() {
   load()

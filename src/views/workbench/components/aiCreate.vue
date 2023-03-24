@@ -21,13 +21,12 @@
               <img v-if="item.url" w-full h-full :src="item.url" />
               <img v-else w-full :src="fileLoadFail" />
             </div>
-            <div class="monolayer">
+            <div class="monolayer" @click.self="handleSuccessTemplate(item)">
               <div></div>
-              <div class="preview-box" @click="handleDetail(item)">
-                <i class="el-icon-search"></i>
-                <span>预览</span>
+              <div class="preview-box" @click.stop="handleSuccessTemplate(item)">立即使用</div>
+              <div class="bottom-text" @click.stop="handleDetail(item)">
+                <i class="el-icon-search"></i> <span>预览</span>
               </div>
-              <div class="bottom-text" @click="handleSuccessTemplate(item)">立即使用</div>
             </div>
           </div>
           <div text-center text-5 my-3>

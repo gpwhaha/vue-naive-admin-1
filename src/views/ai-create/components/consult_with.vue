@@ -1,14 +1,21 @@
 <template>
   <n-spin wh-full :show="loading">
     <div wh-full p-8>
-      <n-tabs v-model:value="activeName" type="line" animated>
+      <n-tabs v-model:value="activeName" type="bar" animated>
         <n-tab name="1"> 协商 </n-tab>
         <n-tab name="2"> 评论 </n-tab>
       </n-tabs>
       <div wh-full py-4>
         <div v-if="activeName === '1'">
-          <n-button w-full> <TheIcon icon="mdi:account" :size="18" /> 邀请外部协商者 </n-button>
-          <n-input v-model:value="people" type="text" my-6 placeholder="可搜索内部协商者" />
+          <n-button w-full @click="inviteUser"> <TheIcon icon="mdi:account" :size="18" /> 邀请外部协商者 </n-button>
+          <n-input
+            ref="inputInstRef"
+            v-model:value="people"
+            type="text"
+            my-6
+            placeholder="邀请内部协商者"
+            @focus="chooseMember"
+          />
           <n-card content-style="padding: 1rem;">
             <n-scrollbar v-if="userList.length > 0" h-80 @scroll="scroll">
               <div v-for="(item, index) in userList" :key="index" w-full flex items-center>
@@ -30,13 +37,14 @@
             </n-scrollbar>
             <emptyData v-else h-90 text="无协商邀请人"></emptyData>
           </n-card>
-          <n-h6 mt-4 mb-1 prefix="bar"> 协商参与者 </n-h6>
+          <n-h6 my-4 mb-1 prefix="bar"> 协商参与者 </n-h6>
           <div v-if="inviteList.length > 0" style="height: 30vh" class="cus-scroll-y wh-full">
-            <div v-for="(item, index) in inviteList" :key="index" w-full flex items-center>
-              <n-avatar round size="small" :src="item.photoUrl" />
+            <div v-for="(item, index) in inviteList" :key="index" w-full flex items-center mb-4>
+              <n-avatar v-if="item.photoUrl" round size="small" :src="item.photoUrl" />
+              <TheIcon v-else icon="flat-color-icons:businessman" :size="18" class="mr-5" />
               <div mx-4>
                 <div w-full flex items-center>
-                  <div text-6>{{ item.userName }}</div>
+                  <div text-6>{{ item.userName || item.inviteUserPhone }}</div>
                   <div
                     bg-yellow-500
                     color-white
@@ -59,12 +67,20 @@
         </div>
       </div>
     </div>
+    <!-- 邀请弹窗 -->
+    <inviteModal
+      v-model:visible="inviteDialog"
+      :contract-id="form.contractId"
+      @getParticipators="getParticipators"
+    ></inviteModal>
+    <member-picker ref="member"></member-picker>
   </n-spin>
 </template>
 
 <script setup>
 import { getUser, getUserPhoto, queryInvite, getInvite } from '../api'
 import Comment from './comment.vue'
+import inviteModal from './invite_modal.vue'
 
 const INNER_USER = 0
 const OUTER_USER = 1
@@ -74,9 +90,12 @@ const props = defineProps({
     default: () => {},
   },
 })
+const member = ref(null)
 const loading = ref(false)
 const activeName = ref('1')
+const inviteDialog = ref(false)
 const people = ref(null)
+const inputInstRef = ref(null)
 const userList = ref([])
 const inviteList = ref([])
 const search = ref({
@@ -84,6 +103,21 @@ const search = ref({
   pageSize: 10,
   userName: null,
 })
+
+async function chooseMember() {
+  inputInstRef.value?.blur()
+  let result =
+    (await member.value.showModal({
+      initialData: [],
+      multiple: true,
+      hasPermission: false,
+    })) || []
+  console.log(result, 'result')
+}
+
+function inviteUser() {
+  inviteDialog.value = true
+}
 
 function scroll(event) {
   const dom = event.target

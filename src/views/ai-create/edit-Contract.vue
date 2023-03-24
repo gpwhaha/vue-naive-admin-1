@@ -27,6 +27,7 @@
             :office-file-id="officeFileId"
             :office-file-path="officeFilePath"
           ></yo-zo-office> -->
+          <only-office></only-office>
         </div>
         <div class="right flex">
           <div class="menu-bar flex flex-col items-center pt-4 bg-white ml-4 w-28 h-full">

@@ -118,6 +118,7 @@
 </template>
 
 <script setup>
+import { amountValite } from '@/utils/common'
 import { getContractType } from '@/views/template-manage/api'
 import { modifyContractBase, addRelativeCompany } from '../api'
 import api from '@/api/index'
@@ -136,7 +137,6 @@ const ownTypeList = ref([])
 const relativeTypeList = ref([])
 const economicTypeList = ref([])
 const enterpriseNameOptions = ref([])
-const phoneValite = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
 const size = 'medium'
 const formRef = ref(null)
 const model = ref({
@@ -157,7 +157,7 @@ const rules = {
   },
   amount: {
     validator(rule, value) {
-      return phoneValite.test(value)
+      return amountValite.test(value)
     },
     required: false,
     trigger: ['input', 'blur'],
@@ -246,12 +246,12 @@ const inputValidationStatus = computed(() => {
 })
 
 function createFeedback(value) {
-  if (value && !phoneValite.test(value)) return '请填写正确的合同金额，支持保留两位小数'
+  if (value && !amountValite.test(value)) return '请填写正确的合同金额，支持保留两位小数'
   return ''
 }
 
 function createStatus(value) {
-  if (value && !phoneValite.test(value)) return 'error'
+  if (value && !amountValite.test(value)) return 'error'
   return void 0
 }
 
@@ -259,7 +259,7 @@ function handleValidateSave(e) {
   e.preventDefault()
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      if (model.value.amount && !phoneValite.test(model.value.amount)) return
+      if (model.value.amount && !amountValite.test(model.value.amount)) return
       contentLoading.value = true
       const code = await modifyContractBaseInfo(model.value)
       if (code === 0) {

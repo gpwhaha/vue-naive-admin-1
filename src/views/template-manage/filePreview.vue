@@ -9,14 +9,14 @@
     </div>
   </div>
   <div wh-full class="bg-[#f5f6fb]" style="height: 93%" pb-4>
-    <yo-zo-office
+    <!-- <yo-zo-office
       :readonly="readonly"
       :open-edit="openEdit"
       :office-file-name="query.fileTitle"
       :office-file-id="query.fileId"
       :office-file-path="query.officeFilePath"
-    ></yo-zo-office>
-    <!-- <only-office></only-office> -->
+    ></yo-zo-office> -->
+    <only-office></only-office>
   </div>
 </template>
 

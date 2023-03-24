@@ -88,10 +88,13 @@
           </div>
           <CrudTable
             ref="$table"
-            :scroll-x="500"
+            :scroll-x="300"
             :is-pagination="isPagination"
             :columns="columns"
             :get-data="getRecentContractList"
+            :style="{ height: `20rem` }"
+            :max-height="150"
+            flex-height
           >
           </CrudTable>
         </div>
@@ -460,6 +463,7 @@ onMounted(() => {
     grid-template-rows: 18rem 15rem 1fr;
     box-sizing: border-box;
     padding: 2rem;
+    border: 2px transparent;
     transition: 0.1s all;
     cursor: pointer;
 
@@ -508,6 +512,7 @@ onMounted(() => {
         color: #999999;
         font-size: 1.5rem;
         margin-top: 4rem;
+        margin-bottom: 4rem;
       }
 
       .btn {
