@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div ref="mapRef" wi-full h-100></div>
+    <div ref="mapRef" v-size-change="handleSizeChange" wi-full h-100></div>
   </div>
 </template>
 
@@ -44,6 +44,11 @@ const func = reactive({
 })
 
 const { proxy } = getCurrentInstance()
+
+function handleSizeChange(size) {
+  console.log(size, 'size')
+  useMap.value.resize()
+}
 
 function handleChangeTab() {
   load()
@@ -281,8 +286,8 @@ async function init() {
   }
   option && useMap.value.setOption(option)
   useMap.value.resize()
-  //图表自适应窗口大小
-  window.onresize = useMap.value.resize
+  // //图表自适应窗口大小
+  // window.onresize = useMap.value.resize
 }
 onMounted(() => {
   init()
@@ -290,7 +295,7 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   proxy.$echarts.dispose(useMap.value)
-  window.onresize = null
+  // window.onresize = null
 })
 </script>
 

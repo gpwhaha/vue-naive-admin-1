@@ -5,6 +5,7 @@ import '@/styles/global.scss'
 import 'virtual:svg-icons-register'
 
 import echarts from '@/plugin/echarts'
+import sizeChange from '@/directives/size-direct'
 
 import { createApp } from 'vue'
 import { setupRouter } from '@/router'
@@ -21,6 +22,8 @@ async function setupApp() {
   await setupRouter(app)
 
   app.mount('#app')
+
+  app.directive('sizeChange', sizeChange)
 }
 
 setupApp()

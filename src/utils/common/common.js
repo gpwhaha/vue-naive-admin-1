@@ -332,3 +332,38 @@ export const convertChineseToNumber = (amount) => {
     return string
   }
 }
+
+const getHandledValue = num => {
+  return num < 10 ? `0${num}` : num
+}
+/**
+ * 格式化日期格式
+ * @param {*} timeStamp 时间戳
+ * @param {*} startType 格式类型
+ */
+export const getDate = (timeStamp, startType) => {
+  if (timeStamp == null) return timeStamp
+  timeStamp = timeStamp * 1
+  const d = new Date(timeStamp)
+  const year = d.getFullYear()
+  const month = getHandledValue(d.getMonth() + 1)
+  const date = getHandledValue(d.getDate())
+  const hours = getHandledValue(d.getHours())
+  const minutes = getHandledValue(d.getMinutes())
+  const second = getHandledValue(d.getSeconds())
+  let resStr = ''
+  if (!startType)
+    resStr = `${year}-${month}-${date} ${hours}:${minutes}:${second}`
+  else if (startType === 'yyyy-MM-dd HH:mm:ss')
+    return `${year}-${month}-${date} ${hours}:${minutes}:${second}`
+  else if (startType === 'yyyy-MM-dd') resStr = `${year}-${month}-${date}`
+  else if (startType === 'yyyy年MM月dd日')
+    resStr = `${year}年${month}月${date}日`
+  else if (startType === 'yyyy-MM-dd HH:mm')
+    resStr = `${year}-${month}-${date} ${hours}:${minutes}`
+  else if (startType === 'MM-dd HH:mm')
+    resStr = `${month}-${date} ${hours}:${minutes}`
+  else if (startType === '年月日') resStr = dateToChStr(d)
+  else if (startType === 'yyyy.MM.dd') resStr = `${year}.${month}.${date}`
+  return resStr
+}

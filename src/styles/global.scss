@@ -85,3 +85,11 @@ body {
     }
   }
 }
+
+.consultReportDialog {
+  width: 60% !important;
+  margin-top: 4vh;
+  .n-dialog__content {
+    margin: 0;
+  }
+}

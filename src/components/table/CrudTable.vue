@@ -71,22 +71,13 @@ const props = defineProps({
       return {}
     },
   },
-  /**
-   * ! 约定接口入参出参
-   * * 分页模式需约定分页接口入参
-   *    @pageSize 分页参数：一页展示多少条，默认10
-   *    @pageNo   分页参数：页码，默认1
-   * * 需约定接口出参
-   *    @pageData 分页模式必须,非分页模式如果没有pageData则取上一层data
-   *    @total    分页模式必须，非分页模式如果没有total则取上一层data.length
-   */
   getData: {
     type: Function,
     required: true,
   },
 })
 
-const emit = defineEmits(['update:queryItems', 'onChecked'])
+const emit = defineEmits(['update:queryItems', 'onChecked', 'reset', 'setPageCount', 'setPage'])
 const loading = ref(false)
 const initQuery = { ...props.queryItems }
 const tableData = ref([])
@@ -101,7 +92,8 @@ async function handleQuery() {
       paginationParams = { begin: pagination.page, pageSize: pagination.pageSize }
     }
     const { data } = await props.getData({ ...props.queryItems, ...props.extraParams, ...paginationParams })
-    tableData.value = data?.data || data
+    emit('setPageCount', data?.total)
+    tableData.value = data?.data ? data.data : data.item ? data.item : data
     pagination.itemCount = data.total ?? data.length
   } catch (error) {
     tableData.value = []
@@ -111,6 +103,7 @@ async function handleQuery() {
   }
 }
 function handleSearch() {
+  emit('setPage')
   pagination.page = 1
   handleQuery()
 }
@@ -120,6 +113,7 @@ async function handleReset() {
     queryItems[key] = ''
   }
   emit('update:queryItems', { ...queryItems, ...initQuery })
+  emit('reset')
   await nextTick()
   pagination.page = 1
   handleQuery()
@@ -139,5 +133,6 @@ function onChecked(rowKeys) {
 defineExpose({
   handleSearch,
   handleReset,
+  handleQuery,
 })
 </script>
