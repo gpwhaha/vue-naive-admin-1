@@ -98,7 +98,7 @@
 
 <script setup>
 import { getSubsDepartment, getDepartmentUsers } from './api'
-import TheIcon from '@/components/icon/TheIcon.vue'
+import TheIcon from '@/components/icon/the-icon.vue'
 const props = defineProps({
   width: {
     type: String,

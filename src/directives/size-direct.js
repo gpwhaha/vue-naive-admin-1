@@ -25,7 +25,7 @@ export default {
     ob.observe(el)
     map.set(el, binding.value)
   },
-  unmounted() {
+  unmounted(el) {
     //取消监听
     ob.unobserve(el)
   },

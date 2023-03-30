@@ -16,11 +16,11 @@
 </template>
 
 <script setup>
-import moneyCards from './components/moneyCards.vue'
-import todoDesk from './components/todoDesk.vue'
-import AiCreate from './components/aiCreate.vue'
-import AiTools from './components/aiTools.vue'
-import FileHonr from './components/fileHonr.vue'
+import moneyCards from './components/money-cards.vue'
+import todoDesk from './components/todo-desk.vue'
+import AiCreate from './components/ai-create.vue'
+import AiTools from './components/ai-tools.vue'
+import FileHonr from './components/file-honr.vue'
 import NumEchart from './components/echart.vue'
 </script>
 

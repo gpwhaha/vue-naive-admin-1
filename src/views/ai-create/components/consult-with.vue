@@ -80,7 +80,7 @@
 <script setup>
 import { getUser, getUserPhoto, queryInvite, getInvite } from '../api'
 import Comment from './comment.vue'
-import inviteModal from './invite_modal.vue'
+import inviteModal from './invite-modal.vue'
 
 const INNER_USER = 0
 const OUTER_USER = 1

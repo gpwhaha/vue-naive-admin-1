@@ -94,7 +94,6 @@
             :get-data="getRecentContractList"
             :style="{ height: `20rem` }"
             :max-height="150"
-            flex-height
           >
           </CrudTable>
         </div>
@@ -110,9 +109,9 @@
 import AICreateImg from '@/assets/images/AICreate.png'
 import TemplateCreateImg from '@/assets/images/TemplateCreate.png'
 import LocalCreateImg from '@/assets/images/LocalCreate.png'
-import localUpload from './components/local_upload.vue'
-import TemplatePicker from './components/tempalte_picker.vue'
-import AiCreatePicker from './components/aiCreate_picker.vue'
+import localUpload from './components/local-upload.vue'
+import TemplatePicker from './components/tempalte-picker.vue'
+import AiCreatePicker from './components/ai-create-picker.vue'
 import api from '@/api/index'
 import { getRecentContractList, createContractByClone } from './api'
 import { formatDateTime, renderIcon, isNullOrUndef } from '@/utils'

@@ -1,13 +1,13 @@
 const Layout = () => import('@/layout/index.vue')
 
 export default {
-  name: 'Dashboard',
+  name: 'workbench',
   path: '/',
   component: Layout,
   redirect: '/workbench',
   children: [
     {
-      name: 'Workbench',
+      name: 'workbench',
       path: 'workbench',
       component: () => import('./index.vue'),
       meta: {

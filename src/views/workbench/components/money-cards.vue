@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { useMoneyCards } from './useMoneyCards'
+import { useMoneyCards } from './use-money-cards'
 const { imageList } = useMoneyCards()
 </script>
 

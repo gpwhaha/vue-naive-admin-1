@@ -1,5 +1,5 @@
 <template>
-  <CommonPage title="我负责的">
+  <CommonPage title="我参加的">
     <CrudTable
       ref="$table"
       v-model:query-items="queryItems"
@@ -20,9 +20,6 @@
           </QueryBarItem>
           <QueryBarItem label="合同状态" :label-width="80">
             <n-select v-model:value="status" :options="contractSelectStatus" />
-          </QueryBarItem>
-          <QueryBarItem label="创建人" :label-width="80">
-            <n-input v-model:value="queryItems.createName" type="text" placeholder="请输入创建人" />
           </QueryBarItem>
         </n-space>
       </template>
@@ -58,7 +55,7 @@ const queryItems = ref({
   title: '',
   statusList,
   createName: '',
-  dataType: 1,
+  dataType: 2,
   page: 1,
   pageSize: 10,
 })
@@ -66,11 +63,9 @@ const queryItems = ref({
 watch(
   status,
   (val) => {
-    if (val) {
-      let res = val.length > 1 ? JSON.parse(val) : val !== '' ? [val] : []
-      statusList.value = res
-      queryItems.value.statusList = res
-    }
+    let res = val.length > 1 ? JSON.parse(val) : val !== '' ? [val] : []
+    statusList.value = res
+    queryItems.value.statusList = res
   },
   {
     immediate: true,
@@ -86,29 +81,30 @@ const columns = [
   { title: '合同类型', key: 'contractType', width: 100 },
   { title: '创建人', key: 'createUser', width: 100 },
   {
-    title: '履约执行情况',
-    key: 'performInfo',
-    width: 100,
-    render(row) {
-      return h('span', row.performInfo || '0/0')
-    },
-  },
-  {
-    title: '生效时间',
-    key: 'performStartDate',
+    title: '协商时间',
+    key: 'negotiationDate',
     width: 100,
     ellipsis: { tooltip: true },
     render(row) {
-      return h('span', row.performStartDate ? getDate(row.performStartDate) : '-')
+      return h('span', row.negotiationDate ? getDate(row.negotiationDate) : '-')
     },
   },
   {
-    title: '结束时间',
-    key: 'performEndDate',
+    title: '审批时间',
+    key: 'approvalDate',
     width: 100,
     ellipsis: { tooltip: true },
     render(row) {
-      return h('span', row.performStartDate ? getDate(row.performEndDate) : '-')
+      return h('span', row.approvalDate ? getDate(row.approvalDate) : '-')
+    },
+  },
+  {
+    title: '用印申请时间',
+    key: 'applyDate',
+    width: 100,
+    ellipsis: { tooltip: true },
+    render(row) {
+      return h('span', row.applyDate ? getDate(row.applyDate) : '-')
     },
   },
   {
@@ -116,7 +112,8 @@ const columns = [
     key: 'status',
     width: 100,
     render(row) {
-      return h(NTag, { type: statusType(row['status']) }, statusFilter(row['status']))
+      // return h('span', { style: statusStyle(row['status']) }, statusFilter(row['status']))
+      return h(NTag, { type: statusType(row['status']) }, { default: () => statusFilter(row['status']) })
     },
   },
   {
@@ -135,6 +132,7 @@ const columns = [
             text: true,
             secondary: true,
             onClick: () => {
+              console.log(row.status)
               if (row.status == CONTRACT_STATUS_DRAFT) {
                 router.push({
                   name: 'editContract',

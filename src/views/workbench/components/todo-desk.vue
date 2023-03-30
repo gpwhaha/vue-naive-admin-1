@@ -42,7 +42,7 @@
   </div>
 </template>
 <script setup>
-import { useTodoDesk } from './useTodoDesk'
+import { useTodoDesk } from './use-todo-desk'
 const {
   collapseValue,
   size,

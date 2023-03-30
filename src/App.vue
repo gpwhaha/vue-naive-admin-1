@@ -7,5 +7,5 @@
 </template>
 
 <script setup>
-import AppProvider from '@/components/common/AppProvider.vue'
+import AppProvider from '@/components/common/app-provider.vue'
 </script>

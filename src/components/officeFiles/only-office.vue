@@ -150,7 +150,6 @@ function solveComment() {
     var oParagraph = oDocument.GetElement(0)
     var oRange = oParagraph.GetRange(0, 3)
     oRange.Select()
-    console.log(oRange)
   })
 }
 
@@ -198,9 +197,13 @@ function initOffice() {
           console.log('save file>>>>>>>>>>>>>>')
         },
         onDocumentReady: () => {
+          let oDocument = Api.GetDocument()
+          let oParagraph = oDocument.GetElement(0)
+          oParagraph.AddText('ONLYOFFICE Document Builder')
+          Api.AddComment(oParagraph, 'ONLYOFFICE for developers', 'Jane')
+          builder.SaveFile('docx', 'AddComment.docx')
+
           connector.value = docEditorObj.value.createConnector()
-          connector.value.attachEvent('onChangeContentControl', listenChange)
-          console.log('onDocumentReady>>>>>>>>>>>>>>')
         },
         onDocumentStateChange: (event) => {
           // console.log('onDocumentStateChange>>>>>', event)

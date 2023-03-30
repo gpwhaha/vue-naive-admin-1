@@ -65,8 +65,8 @@ import negotiate from '@/assets/images/negotiate.png'
 import examine from '@/assets/images/examine.png'
 import history from '@/assets/images/history.png'
 import AnnexeImg from '@/assets/images/Annexe.png'
-import BaseInfo from './components/base_info.vue'
-import ConsultWith from './components/consult_with.vue'
+import BaseInfo from './components/base-info.vue'
+import ConsultWith from './components/consult-with.vue'
 
 const enumMenus = {
   1: [

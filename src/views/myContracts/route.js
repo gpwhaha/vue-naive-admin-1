@@ -16,7 +16,7 @@ export default {
     {
       name: 'myCreate',
       path: 'myCreate',
-      component: () => import('./myCreate.vue'),
+      component: () => import('./my-create.vue'),
       meta: {
         title: '我创建的',
         icon: 'mdi:create',
@@ -26,7 +26,7 @@ export default {
     {
       name: 'myCharge',
       path: 'myCharge',
-      component: () => import('./myCharge.vue'),
+      component: () => import('./my-charge.vue'),
       meta: {
         title: '我负责的',
         icon: 'mdi:book-open',
@@ -36,7 +36,7 @@ export default {
     {
       name: 'myJoin',
       path: 'myJoin',
-      component: () => import('./myJoin.vue'),
+      component: () => import('./my-join.vue'),
       meta: {
         title: '我参加的',
         icon: 'mdi:book-open',
@@ -46,7 +46,7 @@ export default {
     {
       name: 'myConsultation',
       path: 'myConsultation',
-      component: () => import('./myConsultation.vue'),
+      component: () => import('./my-consultation.vue'),
       meta: {
         title: '我的协商',
         icon: 'mdi:book-open',

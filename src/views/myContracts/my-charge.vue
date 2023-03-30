@@ -1,5 +1,5 @@
 <template>
-  <CommonPage title="我创建的">
+  <CommonPage title="我负责的">
     <CrudTable
       ref="$table"
       v-model:query-items="queryItems"
@@ -20,6 +20,9 @@
           </QueryBarItem>
           <QueryBarItem label="合同状态" :label-width="80">
             <n-select v-model:value="status" :options="contractSelectStatus" />
+          </QueryBarItem>
+          <QueryBarItem label="创建人" :label-width="80">
+            <n-input v-model:value="queryItems.createName" type="text" placeholder="请输入创建人" />
           </QueryBarItem>
         </n-space>
       </template>
@@ -42,6 +45,7 @@
 import { getMyContractList } from './api'
 import { NButton, NTag } from 'naive-ui'
 import { contractStatus, contractSelectStatus, CONTRACT_STATUS_DRAFT } from '@/enums/contract.status'
+import { getDate } from '@/utils'
 
 const router = useRouter()
 const $table = ref(null)
@@ -53,7 +57,8 @@ const pageCount = ref(null)
 const queryItems = ref({
   title: '',
   statusList,
-  dataType: 0,
+  createName: '',
+  dataType: 1,
   page: 1,
   pageSize: 10,
 })
@@ -77,21 +82,47 @@ const extraParams = ref({})
 
 const columns = [
   { title: '合同编号', key: 'billNo', width: 150, ellipsis: { tooltip: true } },
-  { title: '合同名称', key: 'contractTitle', width: 320, ellipsis: { tooltip: true } },
+  { title: '合同名称', key: 'contractTitle', width: 200, ellipsis: { tooltip: true } },
   { title: '合同类型', key: 'contractType', width: 100 },
+  { title: '创建人', key: 'createUser', width: 100 },
+  {
+    title: '履约执行情况',
+    key: 'performInfo',
+    width: 100,
+    render(row) {
+      return h('span', row.performInfo || '0/0')
+    },
+  },
+  {
+    title: '生效时间',
+    key: 'performStartDate',
+    width: 100,
+    ellipsis: { tooltip: true },
+    render(row) {
+      return h('span', row.performStartDate ? getDate(row.performStartDate) : '-')
+    },
+  },
+  {
+    title: '结束时间',
+    key: 'performEndDate',
+    width: 100,
+    ellipsis: { tooltip: true },
+    render(row) {
+      return h('span', row.performStartDate ? getDate(row.performEndDate) : '-')
+    },
+  },
   {
     title: '合同状态',
     key: 'status',
     width: 100,
     render(row) {
-      // return h('span', { style: statusStyle(row['status']) }, statusFilter(row['status']))
-      return h(NTag, { type: statusType(row['status']) }, statusFilter(row['status']))
+      return h(NTag, { type: statusType(row['status']) }, { default: () => statusFilter(row['status']) })
     },
   },
   {
     title: '操作',
     key: 'actions',
-    width: 240,
+    width: 200,
     align: 'center',
     fixed: 'right',
     render(row) {
@@ -150,11 +181,11 @@ function pageSizeChange(pageSize) {
 function setPageCount(num) {
   pageCount.value = Math.ceil(num / queryItems.value.pageSize) || 1
 }
+
 function setPage() {
   queryItems.value.page = 1
   queryItems.value.pageSize = 10
 }
-
 onMounted(() => {
   $table.value?.handleSearch()
 })

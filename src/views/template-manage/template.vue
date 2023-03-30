@@ -167,7 +167,7 @@ import {
   getContractType,
   deleteTpl,
 } from './api'
-import uploadDrawer from './components/uploadFileDrawer.vue'
+import uploadDrawer from './components/upload-file-drawer.vue'
 const router = useRouter()
 const search = reactive({
   templateName: '',

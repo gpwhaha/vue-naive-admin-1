@@ -5,6 +5,7 @@ export default {
   path: '/error-page',
   component: Layout,
   redirect: '/error-page/404',
+  isHidden: true,
   meta: {
     title: '错误页',
     icon: 'mdi:alert-circle-outline',

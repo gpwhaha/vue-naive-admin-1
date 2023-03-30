@@ -1,5 +1,5 @@
 <template>
-  <CommonPage title="我参加的">
+  <CommonPage title="我创建的">
     <CrudTable
       ref="$table"
       v-model:query-items="queryItems"
@@ -42,7 +42,6 @@
 import { getMyContractList } from './api'
 import { NButton, NTag } from 'naive-ui'
 import { contractStatus, contractSelectStatus, CONTRACT_STATUS_DRAFT } from '@/enums/contract.status'
-import { getDate } from '@/utils'
 
 const router = useRouter()
 const $table = ref(null)
@@ -54,8 +53,7 @@ const pageCount = ref(null)
 const queryItems = ref({
   title: '',
   statusList,
-  createName: '',
-  dataType: 2,
+  dataType: 0,
   page: 1,
   pageSize: 10,
 })
@@ -63,9 +61,11 @@ const queryItems = ref({
 watch(
   status,
   (val) => {
-    let res = val.length > 1 ? JSON.parse(val) : val !== '' ? [val] : []
-    statusList.value = res
-    queryItems.value.statusList = res
+    if (val) {
+      let res = val.length > 1 ? JSON.parse(val) : val !== '' ? [val] : []
+      statusList.value = res
+      queryItems.value.statusList = res
+    }
   },
   {
     immediate: true,
@@ -77,49 +77,21 @@ const extraParams = ref({})
 
 const columns = [
   { title: '合同编号', key: 'billNo', width: 150, ellipsis: { tooltip: true } },
-  { title: '合同名称', key: 'contractTitle', width: 200, ellipsis: { tooltip: true } },
+  { title: '合同名称', key: 'contractTitle', width: 320, ellipsis: { tooltip: true } },
   { title: '合同类型', key: 'contractType', width: 100 },
-  { title: '创建人', key: 'createUser', width: 100 },
-  {
-    title: '协商时间',
-    key: 'negotiationDate',
-    width: 100,
-    ellipsis: { tooltip: true },
-    render(row) {
-      return h('span', row.negotiationDate ? getDate(row.negotiationDate) : '-')
-    },
-  },
-  {
-    title: '审批时间',
-    key: 'approvalDate',
-    width: 100,
-    ellipsis: { tooltip: true },
-    render(row) {
-      return h('span', row.approvalDate ? getDate(row.approvalDate) : '-')
-    },
-  },
-  {
-    title: '用印申请时间',
-    key: 'applyDate',
-    width: 100,
-    ellipsis: { tooltip: true },
-    render(row) {
-      return h('span', row.applyDate ? getDate(row.applyDate) : '-')
-    },
-  },
   {
     title: '合同状态',
     key: 'status',
     width: 100,
     render(row) {
       // return h('span', { style: statusStyle(row['status']) }, statusFilter(row['status']))
-      return h(NTag, { type: statusType(row['status']) }, statusFilter(row['status']))
+      return h(NTag, { type: statusType(row['status']) }, { default: () => statusFilter(row['status']) })
     },
   },
   {
     title: '操作',
     key: 'actions',
-    width: 200,
+    width: 240,
     align: 'center',
     fixed: 'right',
     render(row) {
@@ -132,7 +104,6 @@ const columns = [
             text: true,
             secondary: true,
             onClick: () => {
-              console.log(row.status)
               if (row.status == CONTRACT_STATUS_DRAFT) {
                 router.push({
                   name: 'editContract',
@@ -179,11 +150,11 @@ function pageSizeChange(pageSize) {
 function setPageCount(num) {
   pageCount.value = Math.ceil(num / queryItems.value.pageSize) || 1
 }
-
 function setPage() {
   queryItems.value.page = 1
   queryItems.value.pageSize = 10
 }
+
 onMounted(() => {
   $table.value?.handleSearch()
 })

@@ -27,7 +27,7 @@ export default {
     {
       name: 'IntelligentReview',
       path: 'Intelligent-Review',
-      component: () => import('./Intelligent-Review.vue'),
+      component: () => import('./intelligent-review.vue'),
       meta: {
         title: '智能审查',
         icon: 'ion:ios-checkbox',
@@ -40,7 +40,7 @@ export default {
     {
       name: 'editContract',
       path: 'edit-Contract',
-      component: () => import('./edit-Contract.vue'),
+      component: () => import('./edit-contract.vue'),
       isHidden: true,
       meta: {
         title: '编辑合同',

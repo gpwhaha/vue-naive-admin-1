@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import fileLoadFail from '@/assets/images/seal-load-fail.png'
-import { useCreate } from './useCreate'
+import { useCreate } from './use-create'
 const { loading, fileList, load, tagStyle, tagName, toMore, toCreate, handleDetail, handleSuccessTemplate } =
   useCreate()
 onMounted(load)

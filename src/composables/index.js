@@ -1,1 +1,1 @@
-export { default as useCRUD } from './useCRUD'
+export { default as useCRUD } from './use-crud'

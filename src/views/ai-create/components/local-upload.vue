@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import type_select from './type_select.vue'
+import type_select from './type-select.vue'
 const props = defineProps({
   width: {
     type: String,

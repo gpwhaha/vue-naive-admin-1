@@ -27,7 +27,7 @@ export default {
     {
       name: 'previewFile',
       path: 'previewFile',
-      component: () => import('./filePreview.vue'),
+      component: () => import('./file-preview.vue'),
       isHidden: true,
       meta: {
         title: '合同预览',

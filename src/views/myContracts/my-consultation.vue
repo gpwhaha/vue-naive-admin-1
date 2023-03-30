@@ -141,7 +141,11 @@ watch(
           width: 100,
           render(row) {
             // return h('span', { style: statusStyle(row['contractStatus']) }, statusFilter(row['contractStatus']))
-            return h(NTag, { type: statusType(row['contractStatus']) }, statusFilter(row['contractStatus']))
+            return h(
+              NTag,
+              { type: statusType(row['contractStatus']) },
+              { default: () => statusFilter(row['contractStatus']) }
+            )
           },
         },
         {
@@ -257,7 +261,11 @@ watch(
           width: 100,
           render(row) {
             // return h('span', { style: statusStyle(row['contractStatus']) }, statusFilter(row['contractStatus']))
-            return h(NTag, { type: statusType(row['contractStatus']) }, statusFilter(row['contractStatus']))
+            return h(
+              NTag,
+              { type: statusType(row['contractStatus']) },
+              { default: () => statusFilter(row['contractStatus']) }
+            )
           },
         },
         {
