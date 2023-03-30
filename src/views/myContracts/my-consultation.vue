@@ -1,13 +1,12 @@
 <template>
   <CommonPage title="我的协商">
-    <n-tabs mb-2 :default-value="defaultVal" @before-leave="handleBeforeLeave" @update:value="handleUpdateValue">
+    <n-tabs mb-2 :default-value="defaultVal" @update:value="handleUpdateValue">
       <n-tab name="myInvite"> 我的邀请 </n-tab>
       <n-tab name="inviteMe"> 待我协商 </n-tab>
     </n-tabs>
     <CrudTable
       ref="$table"
       v-model:query-items="queryItems"
-      :extra-params="extraParams"
       :scroll-x="1200"
       :columns="columns"
       :get-data="getData"

@@ -11,9 +11,11 @@ const props = defineProps({
   userId: {
     type: String,
     required: true,
+    default: '',
   },
   avatorId: {
     type: Number,
+    default: 0,
   },
   loadFailImg: {
     type: String,

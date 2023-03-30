@@ -1,6 +1,6 @@
 <template>
   <n-tabs ref="tabsInstRef" v-model:value="menu" justify-content="space-evenly" size="large">
-    <n-tab v-for="tab in menuOptions" :key="tab.name" :name="tab.name" @click="handleMenuSelect(tab.key, tab)"
+    <n-tab v-for="tab in menuOptions" :key="tab.name" :name="tab.name" @click="handleMenuSelect(tab)"
       >{{ tab.label }}
     </n-tab>
   </n-tabs>
@@ -27,6 +27,8 @@ watch(
   async () => {
     await nextTick()
     menu.value = curRoute.path.split('/')[1]
+    let item = menuOptions.value.find((i) => i.name === menu.value)
+    if (item) showSideMenu(item)
   },
   { immediate: true }
 )
@@ -50,6 +52,7 @@ function getMenuItem(route, basePath = '') {
     path: resolvePath(basePath, route.path),
     icon: getIcon(route.meta),
     order: route.meta?.order || 0,
+    showSideBar: (route.meta && route.meta.showSideBar) || false,
   }
 
   const visibleChildren = route.children ? route.children.filter((item) => item.name && !item.isHidden) : []
@@ -87,7 +90,7 @@ function getIcon(meta) {
   return null
 }
 
-function handleMenuSelect(key, item) {
+function handleMenuSelect(item) {
   if (isExternal(item.path)) {
     window.open(item.path)
   } else {
@@ -97,6 +100,12 @@ function handleMenuSelect(key, item) {
       router.push(item.path)
     }
   }
+  showSideMenu(item)
+}
+
+function showSideMenu(item) {
+  permissionStore.setSideBarMenu([], false)
+  if (item.showSideBar && item.children.length) permissionStore.setSideBarMenu(item.children, true)
 }
 </script>
 

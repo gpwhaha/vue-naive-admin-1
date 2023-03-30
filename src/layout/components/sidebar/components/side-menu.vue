@@ -6,7 +6,7 @@
     :indent="18"
     :collapsed-icon-size="22"
     :collapsed-width="64"
-    :options="menuOptions"
+    :options="sideMenuOptions"
     :value="activeKey"
     @update:value="handleMenuSelect"
   />
@@ -25,6 +25,10 @@ const activeKey = computed(() => curRoute.meta?.activeMenu || curRoute.name)
 
 const menuOptions = computed(() => {
   return permissionStore.menus.map((item) => getMenuItem(item)).sort((a, b) => a.order - b.order)
+})
+
+const sideMenuOptions = computed(() => {
+  return permissionStore.sideBarMenuRoutes.sort((a, b) => a.order - b.order)
 })
 
 const menu = ref(null)

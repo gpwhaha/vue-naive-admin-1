@@ -54,7 +54,7 @@
                     :checked="checkedIds.includes(item.id)"
                     size="large"
                     @update:checked="checkUser(item)"
-                    @click.native="stopDefaultClick($event)"
+                    @click="stopDefaultClick($event)"
                   >
                   </n-checkbox>
                   <member-avator :user-id="item.id" :size="30" mx-6></member-avator>

@@ -37,6 +37,8 @@ export const usePermissionStore = defineStore('permission', {
   state() {
     return {
       accessRoutes: [],
+      sideBarMenuRoutes: [],
+      showSide: false,
     }
   },
   getters: {
@@ -55,6 +57,10 @@ export const usePermissionStore = defineStore('permission', {
     },
     resetPermission() {
       this.$reset()
+    },
+    setSideBarMenu(route, showSideMenu) {
+      this.showSide = showSideMenu
+      this.sideBarMenuRoutes = route
     },
   },
 })

@@ -10,6 +10,7 @@ export default {
     icon: 'mdi:contract',
     role: ['admin'],
     requireAuth: true,
+    showSideBar: true,
     order: 3,
   },
   children: [

@@ -7,6 +7,7 @@
       <section flex-1 overflow-hidden>
         <n-layout has-sider wh-full>
           <n-layout-sider
+            v-if="permissionStore.showSide"
             bordered
             collapse-mode="width"
             :collapsed-width="64"
@@ -33,7 +34,8 @@ import AppHeader from './components/header/index.vue'
 import SideBar from './components/sidebar/index.vue'
 import AppMain from './components/app-main.vue'
 import AppTags from './components/tags/index.vue'
-import { useAppStore } from '@/store'
+import { useAppStore, usePermissionStore } from '@/store'
 import { header, tags } from '~/settings'
 const appStore = useAppStore()
+const permissionStore = usePermissionStore()
 </script>
