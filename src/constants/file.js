@@ -5,7 +5,7 @@ import { getToken } from '@/utils'
 import { hex_sha1 } from '@/utils/common/sha'
 const baseUrl = import.meta.env.VITE_BASE_API
 export default class ImageType {
-  //用印宝照片
+  //用印宝照片 
   static lnkImage = 0
   //人脸照片
   static faceImage = 1

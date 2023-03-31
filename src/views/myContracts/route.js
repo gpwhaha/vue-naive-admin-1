@@ -17,12 +17,46 @@ export default {
     {
       name: 'myCreate',
       path: 'myCreate',
-      component: () => import('./my-create.vue'),
+      redirect: '/myContract/myCreate/myCreate1',
       meta: {
-        title: '我创建的',
+        title: '我的合同',
         icon: 'mdi:create',
-        keepAlive: false,
+        keepAlive: true,
       },
+      children: [
+        {
+          name: 'myCreate1',
+          path: 'myCreate1',
+          redirect: '/myContract/myCreate/myCreate1/myCreate2',
+          meta: {
+            title: '我创建的',
+            icon: 'mdi:create',
+            keepAlive: true,
+          },
+          children: [
+            {
+              name: 'myCreate2',
+              path: 'myCreate2',
+              component: () => import('./my-create.vue'),
+              meta: {
+                title: '我创建的',
+                icon: 'mdi:create',
+                keepAlive: true,
+              },
+            },
+            {
+              name: 'myCharge2',
+              path: 'myCharge2',
+              component: () => import('./my-charge.vue'),
+              meta: {
+                title: '我负责的',
+                icon: 'mdi:book-open',
+                keepAlive: false,
+              },
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'myCharge',
@@ -51,7 +85,7 @@ export default {
       meta: {
         title: '我的协商',
         icon: 'mdi:book-open',
-        keepAlive: false,
+        keepAlive: true,
       },
     },
   ],

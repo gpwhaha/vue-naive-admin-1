@@ -12,7 +12,7 @@
       :get-data="getData"
       :remote="false"
       :is-pagination="false"
-      @setPageCount="setPageCount"
+      @set-page-count="setPageCount"
     >
     </CrudTable>
     <n-pagination
@@ -30,7 +30,7 @@
   <reportDialog
     v-model:visible="reportDialogShow"
     :consult-data="consultData"
-    @fetchData="queryConsultationReports"
+    @fetch-data="queryConsultationReports"
   ></reportDialog>
 </template>
 

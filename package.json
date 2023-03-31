@@ -40,6 +40,7 @@
     "@iconify/vue": "^3.2.1",
     "@vitejs/plugin-vue": "^1.10.2",
     "@vue/compiler-sfc": "^3.2.31",
+    "babel-eslint": "^10.1.0",
     "chalk": "^5.0.1",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",

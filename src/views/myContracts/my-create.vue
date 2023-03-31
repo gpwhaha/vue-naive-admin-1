@@ -10,8 +10,8 @@
       :is-pagination="false"
       :remote="false"
       @reset="reset"
-      @setPageCount="setPageCount"
-      @setPage="setPage"
+      @set-page-count="setPageCount"
+      @set-page="setPage"
     >
       <template #queryBar>
         <n-space :size="20">

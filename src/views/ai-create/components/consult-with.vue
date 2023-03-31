@@ -71,7 +71,7 @@
     <inviteModal
       v-model:visible="inviteDialog"
       :contract-id="form.contractId"
-      @getParticipators="getParticipators"
+      @get-participators="getParticipators"
     ></inviteModal>
     <member-picker ref="member"></member-picker>
   </n-spin>

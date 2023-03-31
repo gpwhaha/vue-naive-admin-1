@@ -54,7 +54,6 @@ function getMenuItem(route, basePath = '') {
     order: route.meta?.order || 0,
     showSideBar: (route.meta && route.meta.showSideBar) || false,
   }
-
   const visibleChildren = route.children ? route.children.filter((item) => item.name && !item.isHidden) : []
 
   if (!visibleChildren.length) return menuItem
@@ -66,6 +65,7 @@ function getMenuItem(route, basePath = '') {
       ...menuItem,
       label: singleRoute.meta?.title || singleRoute.name,
       key: singleRoute.name,
+      name: route.name,
       path: resolvePath(menuItem.path, singleRoute.path),
       icon: getIcon(singleRoute.meta),
     }
@@ -105,7 +105,7 @@ function handleMenuSelect(item) {
 
 function showSideMenu(item) {
   permissionStore.setSideBarMenu([], false)
-  if (item.showSideBar && item.children.length) permissionStore.setSideBarMenu(item.children, true)
+  if (item.showSideBar && item.children && item.children.length) permissionStore.setSideBarMenu(item.children, true)
 }
 </script>
 
